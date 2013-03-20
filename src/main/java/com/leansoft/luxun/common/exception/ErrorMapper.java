@@ -18,6 +18,8 @@ public class ErrorMapper {
 			return ErrorCode.INDEX_OUT_OF_BOUNDS;
 		} else if (e instanceof MessageSizeTooLargeException) {
 			return ErrorCode.MESSAGE_SIZE_TOO_LARGE;
+		} else if (e instanceof TopicNotExistException) {
+			return ErrorCode.TOPIC_NOT_EXIST;
 		} else {
 			return ErrorCode.INTERNAL_ERROR;
 		}
@@ -34,6 +36,8 @@ public class ErrorMapper {
 				return new MessageSizeTooLargeException(errorMessage);
 			case AUTHENTICATION_FAILURE:
 				return new AuthenticationFailException(errorMessage);
+			case TOPIC_NOT_EXIST:
+				return new TopicNotExistException(errorMessage);
 			default:
 				return new InternalErrorException(errorMessage);
 		}

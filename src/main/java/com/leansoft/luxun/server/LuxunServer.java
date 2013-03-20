@@ -115,7 +115,7 @@ public class LuxunServer implements Closeable {
 				logger.fatal(ex.getMessage(), ex);
 			}
 			shutdownLatch.countDown();
-			logger.info("shutdown queue luxun completed");
+			logger.info("shutdown luxun server completed");
 			Utils.unregisterMBean(this.log4jController);
 		}
 	}
