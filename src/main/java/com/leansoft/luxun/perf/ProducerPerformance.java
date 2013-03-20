@@ -72,7 +72,7 @@ public class ProducerPerformance {
 		
 		private int threadId;
 		private ProducerPerfConfig config;
-		private Producer<byte[]> producer;
+		private Producer<byte[], byte[]> producer;
 		private Random rand;
 		
 		private AtomicLong totalBytesSent;
@@ -104,7 +104,7 @@ public class ProducerPerformance {
 				props.put("queue.enqueueTimeout.ms", "-1");
 			}
 			ProducerConfig producerConfig = new ProducerConfig(props);
-			producer = new Producer<byte[]>(producerConfig);
+			producer = new Producer<byte[], byte[]>(producerConfig);
 		}
 
 		@Override
@@ -128,7 +128,7 @@ public class ProducerPerformance {
 				}
 				bytesSent += data.length;
 					
-				ProducerData<byte[]> producerData = new ProducerData<byte[]>(config.topic, data);
+				ProducerData<byte[], byte[]> producerData = new ProducerData<byte[], byte[]>(config.topic, data);
 				producer.send(producerData);
 				nSends += 1;
 				if (nSends % config.reportingInterval == 0) {

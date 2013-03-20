@@ -15,19 +15,28 @@
  * limitations under the License.
  */
 
-package com.leansoft.luxun.producer;
-
-import com.leansoft.luxun.common.exception.NoBrokersForTopicException;
+package com.leansoft.luxun.common.exception;
 
 /**
- * utf-8 string producer
- * 
- * @author bulldog
+ * Indicates that the broker id is not between 0 and numBrokers-1
  * 
  */
-public interface IStringProducer extends IProducer<String, String> {
+public class InvalidPartitionException extends RuntimeException {
 
-    @Override
-    public void send(ProducerData<String, String> data) throws NoBrokersForTopicException;
+    private static final long serialVersionUID = 1L;
 
+	public InvalidPartitionException() {
+	}
+
+	public InvalidPartitionException(String message) {
+		super(message);
+	}
+
+	public InvalidPartitionException(Throwable cause) {
+		super(cause);
+	}
+
+	public InvalidPartitionException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

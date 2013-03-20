@@ -22,15 +22,16 @@ public class ProducerMethodsTest {
 		Properties props = new Properties();
 		props.put("broker.list", "placeholder");
 		ProducerConfig config = new ProducerConfig(props);
+		IPartitioner<String> mockPartitioner = EasyMock.createMock(IPartitioner.class);
 		ProducerPool<String> mockProducerPool = EasyMock.createMock(ProducerPool.class);
 		BrokerInfo mockBrokerInfo = EasyMock.createMock(BrokerInfo.class);
 		
-		Producer<String> producer = new Producer<String>(config, mockProducerPool, false, mockBrokerInfo);
+		Producer<String, String> producer = new Producer<String, String>(config, mockPartitioner, mockProducerPool, false, mockBrokerInfo);
 		
 		try {
-			ProducerData<String> producerData = new ProducerData<String>("the_topic", "the_datum");
+			ProducerData<String, String> producerData = new ProducerData<String, String>("the_topic", "the_datum");
 			producer.send(producerData);
-			fail("Should have thrown a NoBrokersForPartitionException.");
+			fail("Should have thrown a NoBrokersForTopicException.");
 		} catch (NoBrokersForTopicException e) {
 			assertTrue(e.getMessage().contains("the_topic"));
 		}

@@ -178,4 +178,10 @@ public class ProducerConfig implements SyncProducerConfigShared, AsyncProducerCo
     public int getNumRetries() {
         return Utils.getInt(props, "num.retries", 0);
     }
+    
+    /** the partitioner class for partitioning events amongst sub-topics */
+    public String getPartitionerClass() {
+        return Utils.getString(props, "partitioner.class", DefaultPartitioner.class.getName());
+    }
+
 }

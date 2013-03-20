@@ -26,9 +26,11 @@ import com.leansoft.luxun.serializer.Encoder;
  * Producer interface
  * 
  * @author bulldog
+ * @param <K> partition key
+ * @param <V> real message
  * 
  */
-public interface IProducer<V> extends Closeable {
+public interface IProducer<K, V> extends Closeable {
 
     /**
      * Send messages
@@ -36,7 +38,7 @@ public interface IProducer<V> extends Closeable {
      * @param data message data
      * @throws NoBrokersForTopicException no broker for this topic
      */
-    void send(ProducerData<V> data) throws NoBrokersForTopicException;
+    void send(ProducerData<K, V> data) throws NoBrokersForTopicException;
 
     /**
      * get message encoder
@@ -45,4 +47,12 @@ public interface IProducer<V> extends Closeable {
      * @see Encoder
      */
     Encoder<V> getEncoder();
+    
+    /**
+     * get partition chooser
+     * 
+     * @return partition chooser
+     * @see Partitioner
+     */
+    IPartitioner<K> getPartitioner();
 }

@@ -26,15 +26,25 @@ import com.leansoft.luxun.serializer.StringEncoder;
  * @author bulldog
  * 
  */
-public class StringProducer extends Producer<String> implements IStringProducer {
+public class StringProducer extends Producer<String, String> implements IStringProducer {
 
     /**
      * create a string producer with given config
      * 
      * @param config producer config
+     * @param partitioner partitioner rules
+     */
+    public StringProducer(ProducerConfig config, IPartitioner<String> partitioner) {
+        super(config, partitioner, null, true, null);
+    }
+    
+    /**
+     * create a string producer
+     * 
+     * @param config producer config
      */
     public StringProducer(ProducerConfig config) {
-        super(config, null, true, null);
+        super(config);
     }
 
 

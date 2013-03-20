@@ -163,7 +163,7 @@ public class LogManagerTest extends TestCase {
 			log.append(randomString.getBytes());
 		}
 		
-		assertTrue(System.currentTimeMillis() - log.getLastFlushedTime() <= 200);
+		assertTrue(System.currentTimeMillis() - log.getLastFlushedTime() <= 200 * 2);
 	}
 	
 	@After

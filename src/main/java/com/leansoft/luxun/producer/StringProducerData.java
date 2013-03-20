@@ -25,26 +25,42 @@ import java.util.List;
  * @author bulldog
  * 
  */
-public class StringProducerData extends ProducerData<String> {
+public class StringProducerData extends ProducerData<String, String> {
 
     /**
      * @param topic
-     * @param key
-     * @param data
+     * @param key partition key
+     * @param data a list of data
      */
-    public StringProducerData(String topic, List<String> data) {
-        super(topic, data);
+    public StringProducerData(String topic, String key, List<String> data) {
+        super(topic, key, data);
     }
     
     /**
      * @param topic
-     * @param key
-     * @param data
+     * @param key partition key
+     * @param data single data
      */
-    public StringProducerData(String topic, String data) {
-    	super(topic, data);
+    public StringProducerData(String topic, String key, String data) {
+    	super(topic, key, data);
+    }
+    
+    /**
+     * @param topic
+     * @param data a list of data
+     */
+    public StringProducerData(String topic, List<String> data) {
+        super(topic, data);
     }
 
+    /**
+     * @param topic
+     * @param data single data
+     */
+    public StringProducerData(String topic, String data) {
+        super(topic, data);
+    }
+    
     public StringProducerData(String topic) {
         this(topic, new ArrayList<String>());
     }
