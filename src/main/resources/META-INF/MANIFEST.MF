@@ -1,0 +1,6 @@
+Specification-Title: mmq
+Specification-Version: 0.6
+Specification-Vendor: leansoft
+Implementation-Version: 0.6
+Implementation-Vendor: leansoft
+Implementation-Title: a memory mapped queue

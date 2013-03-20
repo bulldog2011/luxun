@@ -1,0 +1,354 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <!-- parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+  </parent-->
+  <groupId>com.leansoft</groupId>
+  <artifactId>luxun</artifactId>
+  <version>0.6.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>luxun</name>
+  <url>https://github.com/luxun/luxun</url>
+  
+  <description>A fast publish-subscribe messaging system based on memory mapped file and Thrift RPC.</description>
+  <scm>
+        <connection>scm:git:git://github.com/luxun/luxun.git</connection>
+        <developerConnection>scm:git:git@github.com:luxun/luxun.git</developerConnection>
+        <url>https://github.com/luxun/luxun</url>
+  </scm>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>51startup</id>
+            <name>bulldog</name>
+            <email>51startup@sina.com</email>
+            <url>https://github.com/bulldog2011</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+    
+  <distributionManagement>
+    <repository>
+      <id>github.release.repo</id>
+      <name>Release Repository</name>
+      <url>file:///dev/bulldog-repo/repo/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>github.snapshot.repo</id>
+      <name>Snapshot Repository</name>
+      <url>file:///dev/bulldog-repo/repo/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.16</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>1.9.9</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.10</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>mx4j</groupId>
+      <artifactId>mx4j-tools</artifactId>
+      <version>3.0.1</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>net.sf.jopt-simple</groupId>
+        <artifactId>jopt-simple</artifactId>
+        <version>4.3</version>
+        <optional>true</optional>
+    </dependency>
+	<dependency>
+	  <groupId>com.leansoft</groupId>
+	  <artifactId>bigqueue</artifactId>
+	  <version>0.6.2-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.thrift</groupId>
+		<artifactId>libthrift</artifactId>
+		<version>0.6.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.xerial.snappy</groupId>
+		<artifactId>snappy-java</artifactId>
+		<version>1.0.4.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.easymock</groupId>
+		<artifactId>easymock</artifactId>
+		<version>3.0</version>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>commons-collections</groupId>
+		<artifactId>commons-collections</artifactId>
+		<version>3.1</version>
+		<scope>test</scope>
+	</dependency>
+  </dependencies>
+  
+  <build>
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>log4j.*</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <resources />
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                    <links>
+                        <link>http://docs.oracle.com/javase/6/docs/api/</link>
+                    </links>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.7</version>
+            <executions>
+              <execution>
+                <id>generate-sources</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <target>
+                    <mkdir dir="target/generated-sources" />
+                    <mkdir dir="src/main/java/com/leansoft/luxun/api/generated" />
+                    <mkdir dir="src/main/java/com/leansoft/luxun/message/generated" />
+                    <delete>
+                      <fileset dir="target/generated-sources" includes="**/*"/>
+                      <fileset dir="src/main/java/com/leansoft/luxun/api/generated" includes="**/*"/>
+                      <fileset dir="src/main/java/com/leansoft/luxun/message/generated" includes="**/*"/>
+                    </delete>
+                    <exec executable="${thrift.executable}">
+                      <arg value="--gen" />
+                      <arg value="java:beans"/>
+                      <arg value="-o"/>
+                      <arg value="target/generated-sources"/>
+                      <arg value="src/main/resources/thrift/api.thrift"/>
+                    </exec>
+                    <exec executable="${thrift.executable}">
+                      <arg value="--gen" />
+                      <arg value="java:beans"/>
+                      <arg value="-o"/>
+                      <arg value="target/generated-sources"/>
+                      <arg value="src/main/resources/thrift/message.thrift"/>
+                    </exec>
+                    <copy todir="src/main/java">
+                      <fileset dir="target/generated-sources/gen-javabean" includes="**/*"/>
+                    </copy>
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+						  <goal>single</goal>
+						</goals>
+						<configuration>
+						<descriptors>
+						  <descriptor>src/main/assembly/assembly.xml</descriptor>
+						</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+            </plugin>
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-release-plugin</artifactId>
+			  <configuration>
+                  <pushChanges>false</pushChanges>
+              </configuration>
+			</plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-enforcer-plugin</artifactId>
+                                        <versionRange>[1.0,)</versionRange>
+                                        <goals>
+                                            <goal>enforce</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+				                <pluginExecution>
+				                  <pluginExecutionFilter>
+				                    <groupId>org.apache.maven.plugins</groupId>
+				                    <artifactId>maven-antrun-plugin</artifactId>
+				                    <versionRange>[1.7,)</versionRange>
+				                    <goals>
+				                      <goal>run</goal>
+				                    </goals>
+				                  </pluginExecutionFilter>
+				                  <action>
+				                    <ignore />
+				                  </action>
+				                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+  </build>
+  
+  
+  <profiles>
+	<profile>
+	    <id>platform-windows</id>
+	    <activation>
+	        <os>
+	            <family>windows</family>
+	        </os>
+	    </activation>
+	    <properties>  
+           <thrift.executable>bin/tool/thrift-0.6.1.exe</thrift.executable>
+        </properties> 
+	</profile>
+	<profile>
+	    <id>platform-unix</id>
+	    <activation>
+	        <os>
+	            <family>unix</family>
+	        </os>
+	    </activation>
+	    <properties>
+	       <!-- please follow instructions in link below to build thrift 0.6.1 on unix platform -->
+	       <!-- http://thrift.apache.org/docs/install/ -->  
+           <thrift.executable>thrift</thrift.executable>
+        </properties> 
+	</profile>
+  </profiles>
+
+	<repositories>
+		<repository>
+		  <id>github.release.repo</id>
+		  <name>Release Repository</name>
+		  <url>https://raw.github.com/bulldog2011/bulldog-repo/master/repo/releases/</url>
+		  <releases>
+		    <enabled>true</enabled>
+	        <updatePolicy>always</updatePolicy>
+		  </releases>
+		  <snapshots>
+		    <enabled>false</enabled>
+		  </snapshots>
+		</repository>
+		<repository>
+		  <id>github.snapshot.repo</id>
+          <name>Snapshot Repository</name>
+		  <url>https://raw.github.com/bulldog2011/bulldog-repo/master/repo/snapshots/</url>
+		  <releases>
+		    <enabled>false</enabled>
+		  </releases>
+		  <snapshots>
+		    <enabled>true</enabled>
+	        <updatePolicy>always</updatePolicy>
+		  </snapshots>
+		</repository>
+	</repositories>
+</project>
