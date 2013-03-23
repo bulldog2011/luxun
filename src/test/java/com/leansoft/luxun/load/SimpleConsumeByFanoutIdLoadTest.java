@@ -32,25 +32,25 @@ import com.leansoft.luxun.server.ServerConfig;
 import com.leansoft.luxun.utils.TestUtils;
 import com.leansoft.luxun.utils.Utils;
 
-public class ConsumeByIndexLoadTest {
+public class SimpleConsumeByFanoutIdLoadTest {
 	
 	private int port = 9092;
 	private int brokerId = 0;
-	private LuxunServer server1 = null;
+	private LuxunServer server = null;
 	private String brokerList = brokerId + ":localhost:" + port;
 	
 	@Before
 	public void setup() {
 		Properties props1 = TestUtils.createBrokerConfig(brokerId, port);
 		ServerConfig config1 = new ServerConfig(props1);
-		server1 = TestUtils.createServer(config1);
+		server = TestUtils.createServer(config1);
 	}
 	
 	@After
 	public void clean() throws Exception {
-		server1.close();
+		server.close();
 		
-		Utils.deleteDirectory(new File(server1.config.getLogDir()));
+		Utils.deleteDirectory(new File(server.config.getLogDir()));
 		Thread.sleep(500);
 	}
 	
@@ -59,7 +59,8 @@ public class ConsumeByIndexLoadTest {
 	private static int loop = 5;
 	private static int totalItemCount = 100000;
 	private static int producerNum = 4;
-	private static int consumerNum = 4;
+	private static int consumerGroupANum = 2;
+	private static int consumerGroupBNum = 4;
 	private static int messageLength = 1024;
 	//////////////////////////////////////////////////////////////////
 	
@@ -118,12 +119,18 @@ public class ConsumeByIndexLoadTest {
 		private final SimpleConsumer simpleConsumer;
 		private final String topic;
 		private final Decoder<String> stringDecoder = new StringDecoder();
+		private final String fanoutId;
+		private final AtomicInteger itemCount;
 		
-		public SequentialConsumerThread(CountDownLatch latch, Queue<Result> resultQueue, SimpleConsumer simpleConsumer, String topic) {
+		
+		public SequentialConsumerThread(CountDownLatch latch, Queue<Result> resultQueue, String fanoutId, 
+				SimpleConsumer simpleConsumer, String topic, AtomicInteger itemCount) {
 			this.latch = latch;
 			this.resultQueue = resultQueue;
 			this.simpleConsumer = simpleConsumer;
 			this.topic = topic;
+			this.fanoutId = fanoutId;
+			this.itemCount = itemCount;
 		}
 		
 		public void run() {
@@ -132,10 +139,9 @@ public class ConsumeByIndexLoadTest {
 				latch.countDown();
 				latch.await();
 				
-				long index = 0;
-				while (index < totalItemCount) {
+				while (itemCount.get() < totalItemCount) {
 					try {
-						List<MessageList> listOfMessageList = simpleConsumer.consume(topic, index, 10000);
+						List<MessageList> listOfMessageList = simpleConsumer.consume(topic, fanoutId, 10000);
 						if (listOfMessageList.size() == 0) {
 							Thread.sleep(20); // no item to consume yet, just wait a moment
 						}
@@ -145,7 +151,7 @@ public class ConsumeByIndexLoadTest {
 								AtomicInteger counter = itemMap.get(item);
 								assertNotNull(counter);
 								counter.incrementAndGet();
-								index++;
+								itemCount.incrementAndGet();
 							}
 						}
 					} catch (TopicNotExistException ex) {
@@ -164,12 +170,14 @@ public class ConsumeByIndexLoadTest {
 	
 	public void doRunMixed(int round) throws Exception {
 		//prepare
-		CountDownLatch allLatch = new CountDownLatch(producerNum + consumerNum);
+		CountDownLatch allLatch = new CountDownLatch(producerNum + consumerGroupANum + consumerGroupBNum);
+		@SuppressWarnings("unchecked")
 		IProducer<String, String>[] producers = new IProducer[producerNum];
-		SimpleConsumer[] consumers = new SimpleConsumer[consumerNum];
+		SimpleConsumer[] groupAConsumers = new SimpleConsumer[consumerGroupANum];
+		SimpleConsumer[] groupBConsumers = new SimpleConsumer[consumerGroupBNum];
 		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
 		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<Result>();
-		String topic = "load-test001-" + round;
+		String topic = "load-test002-" + round;
 		
 		//run testing
 		for(int i = 0; i < producerNum; i++) {
@@ -183,10 +191,19 @@ public class ConsumeByIndexLoadTest {
 			p.start();
 		}
 		
-		for(int i = 0; i < consumerNum; i++) {
+		AtomicInteger groupAItemCount = new AtomicInteger(0);
+		for(int i = 0; i < consumerGroupANum; i++) {
 			SimpleConsumer simpleConsumer = new SimpleConsumer("localhost", 9092, 60000);
-			consumers[i] = simpleConsumer;
-			SequentialConsumerThread c = new SequentialConsumerThread(allLatch, consumerResults, simpleConsumer, topic);
+			groupAConsumers[i] = simpleConsumer;
+			SequentialConsumerThread c = new SequentialConsumerThread(allLatch, consumerResults, "group-a", simpleConsumer, topic, groupAItemCount);
+			c.start();
+		}
+		
+		AtomicInteger groupBItemCount = new AtomicInteger(0);
+		for(int i = 0; i < consumerGroupBNum; i++) {
+			SimpleConsumer simpleConsumer = new SimpleConsumer("localhost", 9092, 60000);
+			groupBConsumers[i] = simpleConsumer;
+			SequentialConsumerThread c = new SequentialConsumerThread(allLatch, consumerResults, "group-b", simpleConsumer, topic, groupBItemCount);
 			c.start();
 		}
 		
@@ -196,22 +213,25 @@ public class ConsumeByIndexLoadTest {
 			assertEquals(result.status, Status.SUCCESS);
 		}
 		
-		for(int i = 0; i < consumerNum; i++) {
+		for(int i = 0; i < consumerGroupANum + consumerGroupBNum; i++) {
 			Result result = consumerResults.take();
 			assertEquals(result.status, Status.SUCCESS);
 		}
 		
 		assertTrue(itemMap.size() == totalItemCount);
 		for(AtomicInteger counter : itemMap.values()) {
-			assertTrue(counter.get() == consumerNum);
+			assertTrue(counter.get() == 2);
 		}
 		
 		// closing
 		for(int i = 0; i < producerNum; i++) {
 			producers[i].close();
 		}
-		for(int i = 0; i < consumerNum; i++) {
-			consumers[i].close();
+		for(int i = 0; i < consumerGroupANum; i++) {
+			groupAConsumers[i].close();
+		}
+		for(int i = 0; i < consumerGroupBNum; i++) {
+			groupBConsumers[i].close();
 		}
 	}
 	
