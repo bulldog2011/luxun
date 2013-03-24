@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
+//import org.apache.thrift.server.THsHaServer;
 import org.apache.thrift.server.TNonblockingServer;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TNonblockingServerSocket;
@@ -49,6 +50,14 @@ public class ThriftServer implements Closeable {
         
         this.server = new TNonblockingServer(tnbArgs);
         
+//        THsHaServer.Args thhArgs = new THsHaServer.Args(tnbSocketTransport);
+//        thhArgs.processor(tprocessor);
+//        // Nonblocking server mode must use TFramedTransport
+//        thhArgs.transportFactory(new TFramedTransport.Factory());
+//        thhArgs.protocolFactory(new TBinaryProtocol.Factory());
+//
+//        this.server = new THsHaServer(thhArgs);
+    
         this.serverThread = new ServerThread(this.server);
 	}
 

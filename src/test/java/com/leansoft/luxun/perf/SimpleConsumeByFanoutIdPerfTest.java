@@ -1,6 +1,6 @@
 package com.leansoft.luxun.perf;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.List;
@@ -30,25 +30,24 @@ import com.leansoft.luxun.server.ServerConfig;
 import com.leansoft.luxun.utils.TestUtils;
 import com.leansoft.luxun.utils.Utils;
 
-public class SimpleConsumeByIndexPerfTest {
-	
+public class SimpleConsumeByFanoutIdPerfTest {
 	private int port = 9092;
 	private int brokerId = 0;
-	private LuxunServer server1 = null;
+	private LuxunServer server = null;
 	private String brokerList = brokerId + ":localhost:" + port;
 	
 	@Before
 	public void setup() {
 		Properties props1 = TestUtils.createBrokerConfig(brokerId, port);
 		ServerConfig config1 = new ServerConfig(props1);
-		server1 = TestUtils.createServer(config1);
+		server = TestUtils.createServer(config1);
 	}
 	
 	@After
 	public void clean() throws Exception {
-		server1.close();
+		server.close();
 		
-		Utils.deleteDirectory(new File(server1.config.getLogDir()));
+		Utils.deleteDirectory(new File(server.config.getLogDir()));
 		Thread.sleep(500);
 	}
 	
@@ -56,8 +55,9 @@ public class SimpleConsumeByIndexPerfTest {
 	//////////////////////////////////////////////////////////////////
 	private static int loop = 5;
 	private static int totalItemCount = 100000;
-	private static int producerNum = 2;
-	private static int consumerNum = 2;
+	private static int producerNum = 4;
+	private static int consumerGroupANum = 2;
+	private static int consumerGroupBNum = 4;
 	private static int messageLength = 1024;
 	//////////////////////////////////////////////////////////////////
 	
@@ -117,12 +117,18 @@ public class SimpleConsumeByIndexPerfTest {
 		private final SimpleConsumer simpleConsumer;
 		private final String topic;
 		private final Decoder<String> stringDecoder = new StringDecoder();
+		private final String fanoutId;
+		private final AtomicInteger itemCount;
 		
-		public SequentialConsumerThread(CountDownLatch latch, Queue<Result> resultQueue, SimpleConsumer simpleConsumer, String topic) {
+		
+		public SequentialConsumerThread(CountDownLatch latch, Queue<Result> resultQueue, String fanoutId, 
+				SimpleConsumer simpleConsumer, String topic, AtomicInteger itemCount) {
 			this.latch = latch;
 			this.resultQueue = resultQueue;
 			this.simpleConsumer = simpleConsumer;
 			this.topic = topic;
+			this.fanoutId = fanoutId;
+			this.itemCount = itemCount;
 		}
 		
 		public void run() {
@@ -131,11 +137,10 @@ public class SimpleConsumeByIndexPerfTest {
 				latch.countDown();
 				latch.await();
 				
-				long index = 0;
 				long start = System.currentTimeMillis();
-				while (index < totalItemCount) {
+				while (itemCount.get() < totalItemCount) {
 					try {
-						List<MessageList> listOfMessageList = simpleConsumer.consume(topic, index, 10000);
+						List<MessageList> listOfMessageList = simpleConsumer.consume(topic, fanoutId, 10000);
 						if (listOfMessageList.size() == 0) {
 							Thread.sleep(20); // no item to consume yet, just wait a moment
 						}
@@ -143,7 +148,7 @@ public class SimpleConsumeByIndexPerfTest {
 							for(Message message : messageList) {
 								@SuppressWarnings("unused")
 								String item = stringDecoder.toEvent(message);
-								index++;
+								itemCount.incrementAndGet();
 							}
 						}
 					} catch (TopicNotExistException ex) {
@@ -164,13 +169,14 @@ public class SimpleConsumeByIndexPerfTest {
 	
 	public void doRunMixed(int round) throws Exception {
 		//prepare
-		CountDownLatch allLatch = new CountDownLatch(producerNum + consumerNum);
+		CountDownLatch allLatch = new CountDownLatch(producerNum + consumerGroupANum + consumerGroupBNum);
 		@SuppressWarnings("unchecked")
 		IProducer<String, String>[] producers = new IProducer[producerNum];
-		SimpleConsumer[] consumers = new SimpleConsumer[consumerNum];
+		SimpleConsumer[] groupAConsumers = new SimpleConsumer[consumerGroupANum];
+		SimpleConsumer[] groupBConsumers = new SimpleConsumer[consumerGroupBNum];
 		BlockingQueue<Result> producerResults = new LinkedBlockingQueue<Result>();
 		BlockingQueue<Result> consumerResults = new LinkedBlockingQueue<Result>();
-		String topic = "load-test001-" + round;
+		String topic = "load-test002-" + round;
 		
 		long start = System.currentTimeMillis();
 		//run testing
@@ -185,24 +191,33 @@ public class SimpleConsumeByIndexPerfTest {
 			p.start();
 		}
 		
-		for(int i = 0; i < consumerNum; i++) {
+		AtomicInteger groupAItemCount = new AtomicInteger(0);
+		for(int i = 0; i < consumerGroupANum; i++) {
 			SimpleConsumer simpleConsumer = new SimpleConsumer("localhost", 9092, 60000);
-			consumers[i] = simpleConsumer;
-			SequentialConsumerThread c = new SequentialConsumerThread(allLatch, consumerResults, simpleConsumer, topic);
+			groupAConsumers[i] = simpleConsumer;
+			SequentialConsumerThread c = new SequentialConsumerThread(allLatch, consumerResults, "group-a", simpleConsumer, topic, groupAItemCount);
+			c.start();
+		}
+		
+		AtomicInteger groupBItemCount = new AtomicInteger(0);
+		for(int i = 0; i < consumerGroupBNum; i++) {
+			SimpleConsumer simpleConsumer = new SimpleConsumer("localhost", 9092, 60000);
+			groupBConsumers[i] = simpleConsumer;
+			SequentialConsumerThread c = new SequentialConsumerThread(allLatch, consumerResults, "group-b", simpleConsumer, topic, groupBItemCount);
 			c.start();
 		}
 		
 		long totalProducingTime = 0;
 		long totalConsumingTime = 0;
 		
-		//verify & report
+		//verify
 		for(int i = 0; i < producerNum; i++) {
 			Result result = producerResults.take();
 			assertEquals(result.status, Status.SUCCESS);
 			totalProducingTime += result.duration;
 		}
 		
-		for(int i = 0; i < consumerNum; i++) {
+		for(int i = 0; i < consumerGroupANum + consumerGroupBNum; i++) {
 			Result result = consumerResults.take();
 			assertEquals(result.status, Status.SUCCESS);
 			totalConsumingTime += result.duration;
@@ -214,13 +229,13 @@ public class SimpleConsumeByIndexPerfTest {
 		
 		System.out.println("Total item count = " + totalItemCount);
 		System.out.println("Producer thread number = " + producerNum);
-		System.out.println("Consumer thread number = " + consumerNum);
+		System.out.println("Consumer thread number = " + (consumerGroupANum + consumerGroupBNum));
 		System.out.println("Item message length = " + messageLength + " bytes");
 		System.out.println("Total test time = " + (end - start) + " ms.");
 		System.out.println("Total producing time = " + totalProducingTime + " ms.");
 		System.out.println("Average producing time = " + totalProducingTime / producerNum + " ms.");
 		System.out.println("Total consuming time = " + totalConsumingTime + " ms.");
-		System.out.println("Average consuming time = " + totalConsumingTime / consumerNum + " ms.");
+		System.out.println("Average consuming time = " + totalConsumingTime / (consumerGroupANum + consumerGroupBNum) + " ms.");
 		double throughput = (totalItemCount * messageLength * 1.0) / (1024 * 1024) / ((end - start) / 1000.0); 
 		System.out.println("Throughput = " + throughput + " MB/s");
 		System.out.println("-----------------------------------------------");
@@ -229,8 +244,11 @@ public class SimpleConsumeByIndexPerfTest {
 		for(int i = 0; i < producerNum; i++) {
 			producers[i].close();
 		}
-		for(int i = 0; i < consumerNum; i++) {
-			consumers[i].close();
+		for(int i = 0; i < consumerGroupANum; i++) {
+			groupAConsumers[i].close();
+		}
+		for(int i = 0; i < consumerGroupBNum; i++) {
+			groupBConsumers[i].close();
 		}
 	}
 	
@@ -249,5 +267,4 @@ public class SimpleConsumeByIndexPerfTest {
 		
 		System.out.println("Load test finished successfully.");
 	}
-
 }

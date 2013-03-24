@@ -19,8 +19,6 @@ package com.leansoft.luxun.consumer;
 
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.leansoft.luxun.common.exception.InvalidConfigException;
 import com.leansoft.luxun.utils.Utils;
 import static com.leansoft.luxun.utils.Utils.*;
@@ -102,11 +100,11 @@ public class ConsumerConfig {
     
     private void check() {
         // If broker.list is not specified, throw an exception
-        if (StringUtils.isEmpty(this.borkerList)) {
+        if (Utils.isStringEmpty(this.borkerList)) {
             throw new InvalidConfigException("broker.list must be specified in config");
         }
         // If fanoutId is not specified, throw an exception
-        if (StringUtils.isEmpty(this.groupId)) {
+        if (Utils.isStringEmpty(this.groupId)) {
             throw new InvalidConfigException("groupid(aka consuemr group name) must be specified in config");
         }
     }

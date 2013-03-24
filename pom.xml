@@ -63,11 +63,6 @@
       <version>1.2.16</version>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-asl</artifactId>
-      <version>1.9.9</version>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.10</version>
@@ -228,6 +223,59 @@
               </execution>
             </executions>
           </plugin>
+          
+	      <plugin>
+	        <groupId>org.codehaus.mojo</groupId>
+	        <artifactId>appassembler-maven-plugin</artifactId>
+	        <version>1.3</version>
+	        <configuration>
+		      <!-- Set the target configuration directory to be used in the bin scripts -->
+	          <configurationDirectory>conf</configurationDirectory>
+	          <configurationSourceDirectory>conf</configurationSourceDirectory>
+	          <copyConfigurationDirectory>true</copyConfigurationDirectory> 
+              <!-- Extra JVM arguments that will be included in the bin scripts -->
+              <!-- extraJvmArguments>-Xms128m -Xmx512m</extraJvmArguments-->
+	          <programs>
+	            <program>
+	              <mainClass>com.leansoft.luxun.Luxun</mainClass>
+	              <name>server</name>
+	            </program>
+	            <program>
+	              <mainClass>com.leansoft.luxun.console.ConsoleProducer</mainClass>
+	              <name>producer-console</name>
+	            </program>
+	            <program>
+	              <mainClass>com.leansoft.luxun.console.ConsoleConsumer</mainClass>
+	              <name>consumer-console</name>
+	            </program>
+	            <program>
+	              <mainClass>com.leansoft.luxun.console.SimpleConsoleConsumer</mainClass>
+	              <name>simple-consumer-console</name>
+	            </program>
+	            <program>
+	              <mainClass>com.leansoft.luxun.console.AdminConsole</mainClass>
+	              <name>admin-console</name>
+	            </program>
+	           	<program>
+	              <mainClass>com.leansoft.luxun.perf.ProducerPerformance</mainClass>
+	              <name>producer-perf-test</name>
+	            </program>
+	          </programs>
+		      <assembleDirectory>${project.build.directory}/luxun</assembleDirectory>
+		      <repositoryName>lib</repositoryName>
+		      <repositoryLayout>flat</repositoryLayout>
+	        </configuration>
+			<executions>
+				<execution>
+                  <id>assembly</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>assemble</goal>
+                  </goals>
+				</execution>
+			</executions>
+	      </plugin>            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>

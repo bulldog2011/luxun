@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 
@@ -357,7 +356,7 @@ public class LogManager implements Closeable, QueueService.Iface  {
 						result.setErrorCode(ErrorCode.TOPIC_IS_EMPTY);
 						result.setErrorMessage(String.format("topic %s is empty on broker %d", topic, config.getBrokerId()));
 					} else {
-						if (!StringUtils.isEmpty(fanoutId)) { // fanout queue
+						if (!Utils.isStringEmpty(fanoutId)) { // fanout queue
 
 							Lock queueFrontWriteLock = log.getQueueFrontWriteLock(fanoutId);
 							
@@ -580,7 +579,7 @@ public class LogManager implements Closeable, QueueService.Iface  {
 					innerArrayReadLock.lock();
 				
 					long size = -1;
-					if (StringUtils.isEmpty(fanoutId) ) {
+					if (Utils.isStringEmpty(fanoutId) ) {
 						size = log.getSize();
 					} else {
 						size = log.getSize(fanoutId);
