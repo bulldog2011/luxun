@@ -47,7 +47,11 @@ Luxun borrowed design ideas and adapted source from following open source projec
 5. [ashes-queue](http://code.google.com/p/ashes-queue/), FIFO queue based on memory mapped file and paging algorithm, implemented in Java.
 6. [Kesrel](https://github.com/robey/kestrel), a simple, distributed message queue system implemented in Scala, supporting reliable, loosely ordered message queue.
 
+## Origin of the Name
+Similar to [Franz Kafka](http://en.wikipedia.org/wiki/Franz_Kafka), [Lu Xun](http://en.wikipedia.org/wiki/Franz_Kafka) is a great Chinese writer, they lived almost in the same era. In spite of their differences, Kafka and Lu Xun share a common concern on what they saw as the oppressive nature of the past and the authority drawn from it.
 
+Luxun messaging system is created in memorial of Lu Xun, for his great contributions to Chinese literature.
+![Luxun](http://upload.wikimedia.org/wikipedia/commons/thumb/4/48/LuXun1930.jpg/200px-LuXun1930.jpg)
 
 
 
