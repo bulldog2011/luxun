@@ -24,25 +24,41 @@ import java.util.List;
  * Represents the data to be sent using the Producer send API
  * 
  * @author bulldog
+ * @param<K> paratition key
+ * @param<V> real data
  * 
  */
-public class ProducerData<V> {
+public class ProducerData<K, V> {
 
     /** the topic under which the message is to be published */
     private String topic;
+    
+    /** the key used by the partitioner to pick a broker */
+    private K key;
 
     /** variable length data to be published as Luxun messages under topic */
     private List<V> data;
 
-    public ProducerData(String topic, List<V> data) {
+    public ProducerData(String topic, K key, List<V> data) {
         super();
         this.topic = topic;
+        this.key = key;
         this.data = data;
     }
     
-    public ProducerData(String topic, V data) {
+    public ProducerData(String topic, K key, V data) {
     	this.topic = topic;
+    	this.key = key;
     	getData().add(data);
+    }
+    
+    public ProducerData(String topic, List<V> data) {
+        this(topic, null, data);
+    }
+
+    public ProducerData(String topic, V data) {
+        this.topic = topic;
+        getData().add(data);
     }
 
     public String getTopic() {
@@ -62,5 +78,13 @@ public class ProducerData<V> {
 
     public void setData(List<V> data) {
         this.data = data;
+    }
+    
+    public K getKey() {
+        return key;
+    }
+
+    public void setKey(K key) {
+        this.key = key;
     }
 }

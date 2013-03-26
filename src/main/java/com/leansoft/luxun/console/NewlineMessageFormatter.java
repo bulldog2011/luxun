@@ -15,44 +15,25 @@
  * limitations under the License.
  */
 
-package com.leansoft.luxun.producer;
+package com.leansoft.luxun.console;
 
-import java.io.Closeable;
-
-import com.leansoft.luxun.common.exception.NoBrokersForTopicException;
-import com.leansoft.luxun.serializer.Encoder;
+import java.io.PrintStream;
+import java.util.Properties;
 
 /**
- * Producer interface
- * 
  * @author bulldog
- * @param <K> partition key
- * @param <V> real message
  * 
  */
-public interface IProducer<K, V> extends Closeable {
+public class NewlineMessageFormatter implements MessageFormatter {
 
-    /**
-     * Send messages
-     * 
-     * @param data message data
-     * @throws NoBrokersForTopicException no broker for this topic
-     */
-    void send(ProducerData<K, V> data) throws NoBrokersForTopicException;
+    public void writeTo(String message, PrintStream output) {
+        output.println(message);
+    }
 
-    /**
-     * get message encoder
-     * 
-     * @return message encoder
-     * @see Encoder
-     */
-    Encoder<V> getEncoder();
-    
-    /**
-     * get partition chooser
-     * 
-     * @return partition chooser
-     * @see Partitioner
-     */
-    IPartitioner<K> getPartitioner();
+    public void init(Properties props) {
+    }
+
+    public void close() {
+    }
+
 }

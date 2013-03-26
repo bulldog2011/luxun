@@ -15,44 +15,37 @@
  * limitations under the License.
  */
 
-package com.leansoft.luxun.producer;
+package com.leansoft.luxun.console;
 
-import java.io.Closeable;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Properties;
 
-import com.leansoft.luxun.common.exception.NoBrokersForTopicException;
-import com.leansoft.luxun.serializer.Encoder;
 
 /**
- * Producer interface
- * 
  * @author bulldog
- * @param <K> partition key
- * @param <V> real message
  * 
  */
-public interface IProducer<K, V> extends Closeable {
+public class LineMessageReader implements MessageReader {
 
-    /**
-     * Send messages
-     * 
-     * @param data message data
-     * @throws NoBrokersForTopicException no broker for this topic
-     */
-    void send(ProducerData<K, V> data) throws NoBrokersForTopicException;
+    private BufferedReader reader;
+    boolean first = true;
+    public void init(InputStream inputStream, Properties props) {
+    	reader = new BufferedReader(new InputStreamReader(inputStream));
+    }
 
-    /**
-     * get message encoder
-     * 
-     * @return message encoder
-     * @see Encoder
-     */
-    Encoder<V> getEncoder();
-    
-    /**
-     * get partition chooser
-     * 
-     * @return partition chooser
-     * @see Partitioner
-     */
-    IPartitioner<K> getPartitioner();
+    public String readMessage() throws IOException {
+        if(first) {
+            first = false;
+            System.out.println("Enter you message and exit with empty string.");
+        }
+        System.out.print("> ");
+        return reader.readLine();
+    }
+
+    public void close() {
+    }
+
 }

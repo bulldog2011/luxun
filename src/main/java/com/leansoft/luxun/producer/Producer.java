@@ -7,6 +7,7 @@ import com.leansoft.luxun.broker.Broker;
 import com.leansoft.luxun.broker.BrokerInfo;
 import com.leansoft.luxun.broker.ConfigBrokerInfo;
 import com.leansoft.luxun.common.annotations.ClientSide;
+import com.leansoft.luxun.common.exception.InvalidPartitionException;
 import com.leansoft.luxun.common.exception.NoBrokersForTopicException;
 import com.leansoft.luxun.producer.async.CallbackHandler;
 import com.leansoft.luxun.producer.async.EventHandler;
@@ -20,13 +21,15 @@ import static com.leansoft.luxun.utils.Closer.closeQuietly;
  * 
  * @author bulldog
  *
- * @param <K>
- * @param <V>
+ * @param <K> partitioner key
+ * @param <V> real data
  */
 @ClientSide
-public class Producer<V> implements IProducer<V> {
+public class Producer<K, V> implements IProducer<K, V> {
 	
 	ProducerConfig config;
+	
+	private IPartitioner<K> partitioner;
 	
 	ProducerPool<V> producerPool;
 	
@@ -40,10 +43,11 @@ public class Producer<V> implements IProducer<V> {
 
     private Encoder<V> encoder;
     
-    public Producer(ProducerConfig config, ProducerPool<V> producerPool, boolean populateProducerPool,
+    public Producer(ProducerConfig config, IPartitioner<K> partitioner, ProducerPool<V> producerPool, boolean populateProducerPool,
             BrokerInfo brokerInfo) {
         super();
         this.config = config;
+        this.partitioner = partitioner;
         this.producerPool = producerPool;
         if(this.producerPool == null) {
         	this.producerPool =  new ProducerPool<V>(config, getEncoder());
@@ -73,6 +77,7 @@ public class Producer<V> implements IProducer<V> {
      */
     public Producer(ProducerConfig config) {
         this(config, //
+        		null, //
                 null, //
                 true, //
                 null);
@@ -101,9 +106,15 @@ public class Producer<V> implements IProducer<V> {
      *        luxun.producer.AsyncProducer pipeline. If this is null, the
      *        producer does not use the callback handler and hence does not
      *        invoke any callbacks
+     * @param partitioner class that implements the
+     *        luxun.producer.Partitioner<K>, used to supply a custom
+     *        partitioning strategy on the message key (of type K) that is
+     *        specified through the ProducerData<K, T> object in the send
+     *        API. If this is null, producer uses DefaultPartitioner
      */
-    public Producer(ProducerConfig config, Encoder<V> encoder, EventHandler<V> eventHandler, CallbackHandler<V> cbkHandler) {
+    public Producer(ProducerConfig config, Encoder<V> encoder, EventHandler<V> eventHandler, CallbackHandler<V> cbkHandler, IPartitioner<K> partitioner) {
         this(config, //
+        		partitioner,
                 new ProducerPool<V>(config, encoder, eventHandler, cbkHandler), //
                 true, //
                 null);
@@ -115,23 +126,30 @@ public class Producer<V> implements IProducer<V> {
         return encoder == null ?(Encoder<V>) Utils.getObject(config.getSerializerClass()):encoder;
     }
     
-    public void send(ProducerData<V> data) throws NoBrokersForTopicException {
+    public void send(ProducerData<K, V> data) throws NoBrokersForTopicException {
         if (data == null) return;
         configSend(data);
     }
 
-    private void configSend(ProducerData<V> data) {
+    private void configSend(ProducerData<K, V> data) {
         producerPool.send(create(data));
     }
     
-    private ProducerPoolData<V> create(ProducerData<V> pd) {
+    private ProducerPoolData<V> create(ProducerData<K, V> pd) {
         List<Integer> brokerIdList = brokerInfo.getBrokerIdList();
         if (brokerIdList == null || brokerIdList.size() == 0) {
             throw new NoBrokersForTopicException("Topic= " + pd.getTopic());
         }
 
-        int randomBrokerId = random.nextInt(brokerIdList.size());
-        final Integer brokerId = brokerIdList.get(randomBrokerId);
+        int numBrokers = brokerIdList.size();
+        int brokerId = pd.getKey() == null ? 
+        		random.nextInt(numBrokers) : this.getPartitioner().partition(pd.getKey(), numBrokers);
+        		
+        if (brokerId < 0 || brokerId >= numBrokers) {
+            throw new InvalidPartitionException("Invalid broker id : " + brokerId + "\n Valid values are in the range inclusive [0, " + (numBrokers - 1)
+                    + "]");
+        }
+        		
         return this.producerPool.buildProducerPoolData(pd.getTopic(),//
                brokerInfo.getBrokerInfo(brokerId), pd.getData());
     }
@@ -142,5 +160,14 @@ public class Producer<V> implements IProducer<V> {
             closeQuietly(producerPool);
             closeQuietly(brokerInfo);
         }
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public IPartitioner<K> getPartitioner() {
+        if(partitioner == null) {
+            partitioner =  (IPartitioner<K>) Utils.getObject(config.getPartitionerClass());
+        }
+        return partitioner;
 	}
 }

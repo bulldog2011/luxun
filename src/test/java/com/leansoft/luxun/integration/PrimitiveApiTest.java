@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import org.apache.thrift.TException;
 
-import com.leansoft.luxun.api.generated.ConsumeRequest;
 import com.leansoft.luxun.message.Message;
 import com.leansoft.luxun.message.MessageList;
 import com.leansoft.luxun.message.generated.CompressionCodec;

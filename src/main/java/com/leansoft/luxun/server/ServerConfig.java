@@ -44,14 +44,14 @@ public class ServerConfig {
         return getInt(props, "port", 9092);
     }
 
-    /**
-     * hostname of broker. If not set, will pick up from the value returned
-     * from getLocalHost. If there are multiple interfaces getLocalHost may
-     * not be what you want.
-     */
-    public String getHostName() {
-        return getString(props, "hostname", null);
-    }
+//    /**
+//     * hostname of broker. If not set, will pick up from the value returned
+//     * from getLocalHost. If there are multiple interfaces getLocalHost may
+//     * not be what you want.
+//     */
+//    public String getHostName() {
+//        return getString(props, "hostname", null);
+//    }
 
     /** the broker id for this server */
     public int getBrokerId() {
