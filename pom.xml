@@ -43,12 +43,12 @@
     <repository>
       <id>github.release.repo</id>
       <name>Release Repository</name>
-      <url>file:///Volumes/DATA/dev/bulldog-repo/repo/releases</url>
+      <url>file:///dev/bulldog-repo/repo/releases</url>
     </repository>
     <snapshotRepository>
       <id>github.snapshot.repo</id>
       <name>Snapshot Repository</name>
-      <url>file:///Volumes/DATA/dev/bulldog-repo/repo/snapshots</url>
+      <url>file:///dev/bulldog-repo/repo/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
 
