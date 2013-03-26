@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <!-- parent>
         <groupId>org.sonatype.oss</groupId>
@@ -8,7 +7,7 @@
   </parent-->
   <groupId>com.leansoft</groupId>
   <artifactId>luxun</artifactId>
-  <version>0.6.0-SNAPSHOT</version>
+  <version>0.6.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>luxun</name>
@@ -19,6 +18,7 @@
         <connection>scm:git:git://github.com/luxun/luxun.git</connection>
         <developerConnection>scm:git:git@github.com:luxun/luxun.git</developerConnection>
         <url>https://github.com/luxun/luxun</url>
+    <tag>HEAD</tag>
   </scm>
     <licenses>
         <license>
@@ -194,26 +194,26 @@
                     <mkdir dir="src/main/java/com/leansoft/luxun/api/generated" />
                     <mkdir dir="src/main/java/com/leansoft/luxun/message/generated" />
                     <delete>
-                      <fileset dir="target/generated-sources" includes="**/*"/>
-                      <fileset dir="src/main/java/com/leansoft/luxun/api/generated" includes="**/*"/>
-                      <fileset dir="src/main/java/com/leansoft/luxun/message/generated" includes="**/*"/>
+                      <fileset dir="target/generated-sources" includes="**/*" />
+                      <fileset dir="src/main/java/com/leansoft/luxun/api/generated" includes="**/*" />
+                      <fileset dir="src/main/java/com/leansoft/luxun/message/generated" includes="**/*" />
                     </delete>
                     <exec executable="${thrift.executable}">
                       <arg value="--gen" />
-                      <arg value="java:beans"/>
-                      <arg value="-o"/>
-                      <arg value="target/generated-sources"/>
-                      <arg value="src/main/resources/thrift/api.thrift"/>
+                      <arg value="java:beans" />
+                      <arg value="-o" />
+                      <arg value="target/generated-sources" />
+                      <arg value="src/main/resources/thrift/api.thrift" />
                     </exec>
                     <exec executable="${thrift.executable}">
                       <arg value="--gen" />
-                      <arg value="java:beans"/>
-                      <arg value="-o"/>
-                      <arg value="target/generated-sources"/>
-                      <arg value="src/main/resources/thrift/message.thrift"/>
+                      <arg value="java:beans" />
+                      <arg value="-o" />
+                      <arg value="target/generated-sources" />
+                      <arg value="src/main/resources/thrift/message.thrift" />
                     </exec>
                     <copy todir="src/main/java">
-                      <fileset dir="target/generated-sources/gen-javabean" includes="**/*"/>
+                      <fileset dir="target/generated-sources/gen-javabean" includes="**/*" />
                     </copy>
                   </target>
                 </configuration>
