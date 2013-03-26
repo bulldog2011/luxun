@@ -47,7 +47,7 @@ Luxun borrowed design ideas and adapted source from following open source projec
 5. [ashes-queue](http://code.google.com/p/ashes-queue/), FIFO queue based on memory mapped file and paging algorithm, implemented in Java.
 6. [Kestrel](https://github.com/robey/kestrel), a simple, distributed message queue system implemented in Scala, supporting reliable, loosely ordered message queue.
 
-Many thanks to authors of these oos project!
+Many thanks to the authors of these oos projects!
 
 
 ## Origin of the Name
