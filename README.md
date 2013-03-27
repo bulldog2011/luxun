@@ -17,7 +17,7 @@ Luxun is based on the [bigqueue](https://github.com/bulldog2011/bigqueue) librar
 
 ## The Architecture
 
-// TODO
+![The Architecture](http://bulldog2011.github.com/images/luxun/arch-2.png)
 
 
 
@@ -28,7 +28,7 @@ Luxun is based on the [bigqueue](https://github.com/bulldog2011/bigqueue) librar
   
 ## Docs
 
-// TODO
+1. [The architecture and Design of a Publish & Subscribe Messaging System Tailored for Big Data Collecting & Analytics](http://bulldog2011.github.com/blog/2013/03/27/the-architecture-and-design-of-a-pub-sub-messaging-system/).
 
 
 ##Copyright and License
@@ -40,7 +40,7 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-##Contributions
+##Credits
 Luxun borrowed design ideas and adapted source from following open source projects:
 
 1. [Apache Kafka](http://kafka.apache.org/index.html), a distributed publish-subscribe messaging system using Scala as implementation language.
