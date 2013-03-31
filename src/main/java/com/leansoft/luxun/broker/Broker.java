@@ -95,7 +95,6 @@ public class Broker {
      * @param id broker id
      * @param brokerInfoString broker info format: <b>creatorId:host:port</b>
      * @return broker instance with connection config
-     * @see #getZKString()
      */
     public static Broker createBroker(int id, String brokerInfoString) {
         String[] brokerInfo = brokerInfoString.split(":");

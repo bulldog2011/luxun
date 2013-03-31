@@ -96,6 +96,68 @@ public class LazyInitProducerTest extends ProducerConsumerTestHarness {
 		assertTrue(listOfMessageList.isEmpty());
 	}
 	
+	@Test
+	public void testProduceAndFetchOneByOneByIndex() throws TException {
+		// send some messages
+		String topic = "test";
+		for(int i = 0; i < 10; i++) {
+			MessageList messageList = new MessageList();
+			messageList.add(new Message(("hello" + i).getBytes()));
+			producer.send(topic, messageList);
+		}
+		
+		// consume one by one
+		for(int i = 0; i < 5; i++) {
+			List<MessageList> listOfMessageList = consumer.consume(topic, i, -1);
+			assertTrue(listOfMessageList.size() == 1);
+			MessageList msgList = listOfMessageList.get(0);
+			assertTrue(msgList.size() == 1);
+			Message msg = msgList.get(0);
+			assertEquals("hello" + i, new String(msg.getBytes()));
+		}
+		
+		// consume remaining in a batch
+		List<MessageList> listOfMessageList = consumer.consume(topic, 5, 10000);
+		assertTrue(listOfMessageList.size() == 5);
+		for(int i = 5; i < 10; i++) {
+			MessageList msgList = listOfMessageList.get(i - 5);
+			assertTrue(msgList.size() == 1);
+			Message msg = msgList.get(0);
+			assertEquals("hello" + i, new String(msg.getBytes()));
+		}
+	}
+	
+	@Test
+	public void testProduceAndFetchOneByOneByFanoutId() throws TException {
+		// send some messages
+		String topic = "test";
+		for(int i = 0; i < 10; i++) {
+			MessageList messageList = new MessageList();
+			messageList.add(new Message(("hello" + i).getBytes()));
+			producer.send(topic, messageList);
+		}
+		
+		// consume one by one
+		for(int i = 0; i < 5; i++) {
+			List<MessageList> listOfMessageList = consumer.consume(topic, "fan", 0);
+			assertTrue(listOfMessageList.size() == 1);
+			MessageList msgList = listOfMessageList.get(0);
+			assertTrue(msgList.size() == 1);
+			Message msg = msgList.get(0);
+			assertEquals("hello" + i, new String(msg.getBytes()));
+		}
+		
+		// consume remaining in a batch
+		List<MessageList> listOfMessageList = consumer.consume(topic, "fan", 10000);
+		assertTrue(listOfMessageList.size() == 5);
+		for(int i = 5; i < 10; i++) {
+			MessageList msgList = listOfMessageList.get(i - 5);
+			assertTrue(msgList.size() == 1);
+			Message msg = msgList.get(0);
+			assertEquals("hello" + i, new String(msg.getBytes()));
+		}
+	}
+	
 	public void testProduceAndMultiFetchByIndex() throws TException {
 		Map<String, MessageList> messages = new HashMap<String, MessageList>();
 		List<String> topics = new ArrayList<String>();

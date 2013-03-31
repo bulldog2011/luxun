@@ -207,7 +207,7 @@ public class LogManager implements Closeable, QueueService.Iface  {
 	}
 	
 	/**
-	 * Register this broker in ZK for the first time
+	 * Start log flusher scheduler
 	 */
 	public void startup() {
 		if (config.getFlushSchedulerThreadRate() > 0) {
@@ -370,16 +370,22 @@ public class LogManager implements Closeable, QueueService.Iface  {
 									result.setErrorMessage("all messages have been consumed, please try later");
 								} else {
 									int totalFetchedSize = 0;
-									while(!log.isEmpty(fanoutId)) {
-										
-										int length = log.getItemLength(fanoutId);
-										if (totalFetchedSize + length > maxFetchSize) {
-											break;
-										}
-										
+									if (maxFetchSize > 0) { // batch fetch
+										while(!log.isEmpty(fanoutId)) {
+											
+											int length = log.getItemLength(fanoutId);
+											if (totalFetchedSize + length > maxFetchSize) {
+												break;
+											}
+											
+											byte[] item = log.read(fanoutId);
+											response.addToItemList(ByteBuffer.wrap(item));
+											totalFetchedSize += length;
+										} 
+									} else { // fetch one item
 										byte[] item = log.read(fanoutId);
 										response.addToItemList(ByteBuffer.wrap(item));
-										totalFetchedSize += length;
+										totalFetchedSize += item.length;
 									}
 									BrokerTopicStat.getInstance(topic).recordBytesOut(totalFetchedSize);
 									BrokerTopicStat.getBrokerAllTopicStat().recordBytesOut(totalFetchedSize);
@@ -396,22 +402,30 @@ public class LogManager implements Closeable, QueueService.Iface  {
 							} else {
 								long index = startIndex;
 								int totalFetchedSize = 0;
-								while(index != log.getRearIndex()) {
-									
-									int length = log.getItemLength(index);
-									if (totalFetchedSize + length > maxFetchSize) {
-										break;
+								
+								if (maxFetchSize > 0) { // batch fetch
+									while(index != log.getRearIndex()) {
+										
+										int length = log.getItemLength(index);
+										if (totalFetchedSize + length > maxFetchSize) {
+											break;
+										}
+										
+										byte[] item = log.read(index);
+										response.addToItemList(ByteBuffer.wrap(item));
+										response.setLastConsumedIndex(index);
+										if (index == Long.MAX_VALUE) {
+											index = 0;
+										} else {
+											index++;
+										}
+										totalFetchedSize += length;
 									}
-									
+								} else {
 									byte[] item = log.read(index);
 									response.addToItemList(ByteBuffer.wrap(item));
 									response.setLastConsumedIndex(index);
-									if (index == Long.MAX_VALUE) {
-										index = 0;
-									} else {
-										index++;
-									}
-									totalFetchedSize += length;
+									totalFetchedSize += item.length;
 								}
 								BrokerTopicStat.getInstance(topic).recordBytesOut(totalFetchedSize);
 								BrokerTopicStat.getBrokerAllTopicStat().recordBytesOut(totalFetchedSize);
