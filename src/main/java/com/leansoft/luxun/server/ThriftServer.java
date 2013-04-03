@@ -2,6 +2,7 @@ package com.leansoft.luxun.server;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.apache.thrift.TProcessor;
@@ -18,7 +19,7 @@ import com.leansoft.luxun.utils.Utils;
 
 public class ThriftServer implements Closeable {
 	
-	private final Logger logger = Logger.getLogger(ThriftServer.class);
+	private static final Logger logger = Logger.getLogger(ThriftServer.class);
 	
 	
 	private final QueueService.Iface queueService;
@@ -87,7 +88,7 @@ public class ThriftServer implements Closeable {
 		Utils.newThread("luxun-server", this.serverThread, false).start();
 		int timeWaited = 0;
 		int checkInterval = 1000;
-		while(!this.server.isServing()) {
+		while(!this.server.isServing() && !this.serverThread.isFailed()) {
 			logger.info("Wating server to start, time waited : " + timeWaited / 1000 + " s.");
 			if (timeWaited > STARTUP_TIMEOUT_IN_SECONDS * 1000) {
 				String errorMessage = "fail to start server within timeout " + STARTUP_TIMEOUT_IN_SECONDS + " seconds";
@@ -101,7 +102,11 @@ public class ThriftServer implements Closeable {
 				// ignore
 			}
 		}
-		logger.info("Thrift server started on port : " + this.serverConfig.getPort());
+		if (this.serverThread.isFailed()) {
+			logger.info("Thrift server fail to start on port : " + this.serverConfig.getPort());
+		} else {
+			logger.info("Thrift server started on port : " + this.serverConfig.getPort());
+		}
 	}
 	
     public ThriftServerStats getStats() {
@@ -112,13 +117,24 @@ public class ThriftServer implements Closeable {
 		
 		private TNonblockingServer server;
 		
+		private AtomicBoolean failed = new AtomicBoolean(false);
+		
 		ServerThread(TNonblockingServer server) {
 			this.server = server;
 		}
 
 		@Override
 		public void run() {
-			this.server.serve();
+			try {
+				this.server.serve();
+			} catch (Exception e) {
+				failed.set(true);
+				logger.error("Thrift server fail to start", e);
+			}
+		}
+		
+		public boolean isFailed() {
+			return failed.get();
 		}
 		
 	}
