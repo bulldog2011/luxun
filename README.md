@@ -22,7 +22,7 @@ Luxun is based on the [bigqueue](https://github.com/bulldog2011/bigqueue) librar
 
 
 ## Version History
-#### 0.5.1 — *March 25, 2013* : [repository](https://github.com/bulldog2011/bulldog-repo/tree/master/repo/releases/com/leansoft/luxun/0.6.0)
+#### 0.6.0 — *March 25, 2013* : [repository](https://github.com/bulldog2011/bulldog-repo/tree/master/repo/releases/com/leansoft/luxun/0.6.0)
 
 
   
