@@ -52,7 +52,7 @@ public interface IProducer<K, V> extends Closeable {
      * get partition chooser
      * 
      * @return partition chooser
-     * @see Partitioner
+     * @see IPartitioner
      */
     IPartitioner<K> getPartitioner();
 }

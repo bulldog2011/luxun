@@ -24,7 +24,7 @@ import java.util.List;
  * Represents the data to be sent using the Producer send API
  * 
  * @author bulldog
- * @param<K> paratition key
+ * @param<K> partition key
  * @param<V> real data
  * 
  */
