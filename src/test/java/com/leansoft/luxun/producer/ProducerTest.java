@@ -51,12 +51,12 @@ public class ProducerTest extends TestCase {
 	private SyncProducer producer2 = null;
 	private SimpleConsumer consumer1 = null;
 	private SimpleConsumer consumer2 = null;
-	private String borkerList = brokerId1 + ":localhost:" + port1 + "," + brokerId2 + ":localhost:" + port2;
+	private String brokerList = brokerId1 + ":localhost:" + port1 + "," + brokerId2 + ":localhost:" + port2;
 	
 	
 	@Override
 	public void setUp() throws Exception {
-		// set up 2 brokers with 4 partitions each
+		// set up 2 brokers
 		Properties props1 = TestUtils.createBrokerConfig(brokerId1, port1);
 		ServerConfig config1 = new ServerConfig(props1);
 		server1 = TestUtils.createServer(config1);
@@ -100,7 +100,7 @@ public class ProducerTest extends TestCase {
 		Properties props = new Properties();
 		props.put("partitioner.class", StaticPartitioner.class.getName());
 		props.put("serializer.class", StringEncoder.class.getName());
-		props.put("broker.list", borkerList);
+		props.put("broker.list", brokerList);
 		
 		ProducerConfig config = new ProducerConfig(props);
 		IPartitioner<String> partitioner = new StaticPartitioner();
@@ -138,7 +138,7 @@ public class ProducerTest extends TestCase {
 	public void testSendSingleMessage() {
 		Properties props = new Properties();
 		props.put("serializer.class", StringEncoder.class.getName());
-		props.put("broker.list", borkerList);
+		props.put("broker.list", brokerList);
 		
 		ProducerConfig config = new ProducerConfig(props);
 		IPartitioner<String> partitioner = new StaticPartitioner();
@@ -168,7 +168,7 @@ public class ProducerTest extends TestCase {
 		Properties props = new Properties();
 		props.put("partitioner.class", NegativePartitioner.class.getName());
 		props.put("serializer.class", StringEncoder.class.getName());
-		props.put("broker.list", borkerList);
+		props.put("broker.list", brokerList);
 		
 		ProducerConfig config = new ProducerConfig(props);
 		
@@ -204,7 +204,7 @@ public class ProducerTest extends TestCase {
 		// default for producer.type is "sync"
 		Properties props = new Properties();
 		props.put("serializer.class", StringEncoder.class.getName());
-		props.put("broker.list", borkerList);
+		props.put("broker.list", brokerList);
 		ProducerPool<String> producerPool = new ProducerPool<String>(new ProducerConfig(props), new StringEncoder(), syncProducers, new ConcurrentHashMap<Integer, AsyncProducer<String>>(), null, null);
 		List<String> data = new ArrayList<String>();
 		data.add("test1");
@@ -236,7 +236,7 @@ public class ProducerTest extends TestCase {
 	    // change producer.type to "async"
 		Properties props = new Properties();
 		props.put("serializer.class", StringEncoder.class.getName());
-		props.put("broker.list", borkerList);
+		props.put("broker.list", brokerList);
 	    props.put("producer.type", "async");
 		ProducerPool<String> producerPool = new ProducerPool<String>(new ProducerConfig(props), new StringEncoder(), new ConcurrentHashMap<Integer, SyncProducer>(), asyncProducers , null, null);
 		List<String> data = new ArrayList<String>();
@@ -262,7 +262,7 @@ public class ProducerTest extends TestCase {
 		// default for producer.type is "sync"
 		Properties props = new Properties();
 		props.put("serializer.class", StringEncoder.class.getName());
-		props.put("broker.list", borkerList);
+		props.put("broker.list", brokerList);
 		ProducerPool<String> producerPool = new ProducerPool<String>(new ProducerConfig(props), new StringEncoder(), syncProducers, new ConcurrentHashMap<Integer, AsyncProducer<String>>(), null, null);
 		List<String> data = new ArrayList<String>();
 		data.add("test1");
@@ -359,7 +359,7 @@ public class ProducerTest extends TestCase {
 	public void testSendToNewTopic() {
 		Properties props = new Properties();
 		props.put("serializer.class", StringEncoder.class.getName());
-	    props.put("broker.list", this.borkerList);
+	    props.put("broker.list", this.brokerList);
 		props.put("partitioner.class", StaticPartitioner.class.getName());
 		
 		ProducerConfig config = new ProducerConfig(props);
