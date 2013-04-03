@@ -39,7 +39,7 @@ public class LineMessageReader implements MessageReader {
     public String readMessage() throws IOException {
         if(first) {
             first = false;
-            System.out.println("Enter you message and exit with empty string.");
+            System.out.println("Enter your message and exit with empty string.");
         }
         System.out.print("> ");
         return reader.readLine();
