@@ -54,7 +54,7 @@ public class ConsoleProducer {
         //
         OptionSet options = parser.parse(args);
         if (!options.has(brokerListOpt)) {
-            System.err.println("Missing required argument broker-list or zookeeper");
+            System.err.println("Missing required argument broker-list");
             parser.printHelpOn(System.err);
             return;
         }

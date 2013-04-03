@@ -27,6 +27,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
+import com.leansoft.luxun.common.exception.ConsumerTimeoutException;
 import com.leansoft.luxun.consumer.ConsumerConfig;
 import com.leansoft.luxun.consumer.IStreamFactory;
 import com.leansoft.luxun.consumer.MessageStream;
@@ -47,7 +48,7 @@ public class ConsoleConsumer {
 	    ArgumentAcceptingOptionSpec<String> brokerInfoOpt = parser.accepts("brokerinfo", "REQUIRED: broker info list to consume from." +
 				                "Multiple brokers can be given to allow concurrent concuming")
 				 .withRequiredArg().
-				 describedAs("broker.list=brokerid1:hostname1:port1,brokerid2:hostname2:port2")
+				 describedAs("brokerid1:hostname1:port1,brokerid2:hostname2:port2")
 				 .ofType(String.class);
         final ArgumentAcceptingOptionSpec<String> groupIdOpt = parser.accepts("group", "The group id to consume on.")//
                 .withRequiredArg().describedAs("gid").defaultsTo("console-consumer-" + new Random().nextInt(100000)).ofType(String.class);
@@ -85,6 +86,8 @@ public class ConsoleConsumer {
             for (String message : stream) {
             	formatter.writeTo(message, System.out);
             }
+        } catch(ConsumerTimeoutException cte) {
+        	System.out.println("Consumer timeouted.");
         } finally {
             System.out.flush();
             formatter.close();
