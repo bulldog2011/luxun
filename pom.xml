@@ -18,7 +18,7 @@
         <connection>scm:git:git://github.com/luxun/luxun.git</connection>
         <developerConnection>scm:git:git@github.com:luxun/luxun.git</developerConnection>
         <url>https://github.com/luxun/luxun</url>
-    <tag>HEAD</tag>
+    <tag>luxun-0.6.0</tag>
   </scm>
     <licenses>
         <license>
