@@ -6,7 +6,7 @@ package com.leansoft.luxun.producer;
  * @author bulldog
  *
  */
-public interface IPartitioner<T> {
+public interface IPartitioner<K> {
 
 	/**
 	 * Uses the key to calculate a broker id for routing the data to the appropriate broker.
@@ -15,6 +15,6 @@ public interface IPartitioner<T> {
 	 * @param numBrokers number of brokers
 	 * @return broker id
 	 */
-	int partition(T key, int numBrokers);
+	int partition(K key, int numBrokers);
 	
 }
