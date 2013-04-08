@@ -44,7 +44,7 @@ public class SyncProducerConfig implements SyncProducerConfigShared {
         this.props = props;
         this.connectTimeoutMs = getInt(props, "connect.timeout.ms", 5000);
         this.socketTimeoutMs = getInt(props, "socket.timeout.ms", 30000);
-        this.reconnectCount = getInt(props, "reconnect.count", 100000);
+        this.reconnectCount = getInt(props, "reconnect.count", 30000);
         this.reconnectTimeInterval = getInt(props, "reconnect.time.interval.ms", 1000 * 1000 * 10);
         this.maxMessageSize = getInt(props, "max.message.size", 1000 * 1000);//1MB
         //
