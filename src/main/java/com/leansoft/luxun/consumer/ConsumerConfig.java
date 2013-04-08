@@ -47,7 +47,7 @@ public class ConsumerConfig {
 
     private int socketTimeoutMs;
 
-    private int socketBufferSize;
+//    private int socketBufferSize;
 
     private int fetchSize;
 
@@ -87,11 +87,11 @@ public class ConsumerConfig {
         this.groupId = Utils.getString(props, "groupid");
         this.consumerId = Utils.getString(props, "consumerid", null);
         this.socketTimeoutMs = get("socket.timeout.ms", 30 * 1000);
-        this.socketBufferSize = get("socket.buffersize", 64 * 1024);//64KB
+//        this.socketBufferSize = get("socket.buffersize", 64 * 1024);//64KB
         this.fetchSize = get("fetch.size", 1024 * 1024);//1MB
         this.fetchBackoffMs = get("fetcher.backoff.ms", 1000);
         this.maxFetchBackoffMs = get("fetcher.backoff.ms.max", (int) fetchBackoffMs * 10);
-        this.maxQueuedChunks = get("queuedchunks.max", 10);
+        this.maxQueuedChunks = get("queuedchunks.max", 100);
         this.consumerTimeoutMs = get("consumer.timeout.ms", -1);
         this.borkerList = get("broker.list", null);
         this.consumerNumRetries = get("num.retries", 0);
@@ -140,10 +140,10 @@ public class ConsumerConfig {
         return socketTimeoutMs;
     }
 
-    /** the socket receive buffer for network requests */
-    public int getSocketBufferSize() {
-        return socketBufferSize;
-    }
+//    /** the socket receive buffer for network requests */
+//    public int getSocketBufferSize() {
+//        return socketBufferSize;
+//    }
 
     /** the number of bytes of messages attempt to fetch */
     public int getFetchSize() {
