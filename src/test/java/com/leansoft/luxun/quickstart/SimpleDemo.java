@@ -346,6 +346,54 @@ public class SimpleDemo {
 		assertEquals(logEvent, decoder.toEvent(message));
 	}
 	
+	@Test
+	public void consumeMessageWithDifferentFanoutId() throws Exception {
+		Properties props = new Properties();
+		props.put("serializer.class", StringEncoder.class.getName());
+		props.put("broker.list", broker1);
+		
+		ProducerConfig config = new ProducerConfig(props);
+		Producer<String, String> producer = new Producer<String, String>(config);
+		
+		for(int i = 0; i < 100; i++) {
+			ProducerData<String, String> data = new ProducerData<String, String>("test-topic", "test-message" + i);
+			producer.send(data);
+		}
+		
+		producer.close(); // finish with the producer
+		
+		// consume by different fanout id independently
+		String fanoutId = "group-a";
+		List<MessageList> listOfMessageList = simpleConsumer1.consume("test-topic", fanoutId, 10000);
+		assertTrue(listOfMessageList.size() == 100);
+		for(int i = 0; i < 100; i++) {
+			MessageList messageList = listOfMessageList.get(i);
+			assertTrue(messageList.size() == 1);
+			Message message = messageList.get(0);
+			assertEquals("test-message" + i, new String(message.getBytes()));
+		}
+		
+		fanoutId = "group-b";
+		listOfMessageList = simpleConsumer1.consume("test-topic", fanoutId, 10000);
+		assertTrue(listOfMessageList.size() == 100);
+		for(int i = 0; i < 100; i++) {
+			MessageList messageList = listOfMessageList.get(i);
+			assertTrue(messageList.size() == 1);
+			Message message = messageList.get(0);
+			assertEquals("test-message" + i, new String(message.getBytes()));
+		}
+		
+		fanoutId = "group-c";
+		listOfMessageList = simpleConsumer1.consume("test-topic", fanoutId, 10000);
+		assertTrue(listOfMessageList.size() == 100);
+		for(int i = 0; i < 100; i++) {
+			MessageList messageList = listOfMessageList.get(i);
+			assertTrue(messageList.size() == 1);
+			Message message = messageList.get(0);
+			assertEquals("test-message" + i, new String(message.getBytes()));
+		}
+	}
+	
 	@After
 	public void cleanup() throws Exception {
 		server1.close();
