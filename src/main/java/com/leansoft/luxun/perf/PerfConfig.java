@@ -13,7 +13,7 @@ public abstract class PerfConfig {
 	
 	protected static OptionParser parser = new OptionParser();
 	
-	protected static ArgumentAcceptingOptionSpec<String> topicOpt = parser.accepts("topic", "REQUIRED: The topic to consume from.")
+	protected static ArgumentAcceptingOptionSpec<String> topicOpt = parser.accepts("topic", "REQUIRED: The topic to produce to or consume from.")
 	                                                 .withRequiredArg().describedAs("topic").ofType(String.class);
 	
 	protected static ArgumentAcceptingOptionSpec<Long> numMessagesOpt = parser.accepts("messages", "The number of messages to send or consume")
@@ -37,7 +37,6 @@ public abstract class PerfConfig {
         for (OptionSpec<?> arg : optionSepcs) {
             if (!options.has(arg)) {
                 System.err.println("Missing required argument " + arg);
-               // parser.formatHelpWith(new MyFormatter());
                 parser.printHelpOn(System.err);
                 System.exit(1);
             }

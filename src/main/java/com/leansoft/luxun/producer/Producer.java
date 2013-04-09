@@ -142,13 +142,15 @@ public class Producer<K, V> implements IProducer<K, V> {
         }
 
         int numBrokers = brokerIdList.size();
-        int brokerId = pd.getKey() == null ? 
+        int index = pd.getKey() == null ? 
         		random.nextInt(numBrokers) : this.getPartitioner().partition(pd.getKey(), numBrokers);
         		
-        if (brokerId < 0 || brokerId >= numBrokers) {
-            throw new InvalidPartitionException("Invalid broker id : " + brokerId + "\n Valid values are in the range inclusive [0, " + (numBrokers - 1)
+        if (index < 0 || index >= numBrokers) {
+            throw new InvalidPartitionException("Invalid broker index : " + index + "\n Valid values are in the range inclusive [0, " + (numBrokers - 1)
                     + "]");
-        }
+        }		
+        		
+        int brokerId = brokerIdList.get(index);
         		
         return this.producerPool.buildProducerPoolData(pd.getTopic(),//
                brokerInfo.getBrokerInfo(brokerId), pd.getData());
