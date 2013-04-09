@@ -93,8 +93,8 @@ public class ServerConfig {
     }
 
     /** the maximum total size of all log page files before deleting it */
-    public int getLogRetentionSize() {
-        return getInt(props, "log.retention.size", -1);
+    public long getLogRetentionSize() {
+        return getLong(props, "log.retention.size", -1L);
     }
 
     /**
