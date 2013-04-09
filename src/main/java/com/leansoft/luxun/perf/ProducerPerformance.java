@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.log4j.Logger;
 
+import com.leansoft.luxun.message.Message;
 import com.leansoft.luxun.message.generated.CompressionCodec;
 import com.leansoft.luxun.producer.Producer;
 import com.leansoft.luxun.producer.ProducerConfig;
@@ -72,7 +73,7 @@ public class ProducerPerformance {
 		
 		private int threadId;
 		private ProducerPerfConfig config;
-		private Producer<byte[], byte[]> producer;
+		private Producer<Message, Message> producer;
 		private Random rand;
 		
 		private AtomicLong totalBytesSent;
@@ -95,8 +96,7 @@ public class ProducerPerformance {
 			this.allDone = allDone;
 			
 			Properties props = new Properties();
-			String[] brokerInfoArray = config.brokerInfo.split("=");
-			props.put("broker.list", brokerInfoArray[1]);
+			props.put("broker.list", config.brokerInfo);
 			props.put("compression.codec", String.valueOf(config.compressionCodec.getValue()));
 			if(config.isAsync) {
 				props.put("producer.type", "async");
@@ -104,7 +104,7 @@ public class ProducerPerformance {
 				props.put("queue.enqueueTimeout.ms", "-1");
 			}
 			ProducerConfig producerConfig = new ProducerConfig(props);
-			producer = new Producer<byte[], byte[]>(producerConfig);
+			producer = new Producer<Message, Message>(producerConfig);
 		}
 
 		@Override
@@ -113,7 +113,8 @@ public class ProducerPerformance {
 			long lastBytesSent = 0L;
 			int nSends = 0;
 			int lastNSends = 0;
-			byte[] data = new byte[config.messageSize];
+			String randomString = randomString(config.messageSize);
+			byte[] data = randomString.getBytes();
 			long reportTime = System.currentTimeMillis();
 			long lastReportTime = reportTime;
 			long messagesPerThread = config.numMessages / config.numThreads;
@@ -124,11 +125,12 @@ public class ProducerPerformance {
 				
 				if (!config.isFixSize) {
 					int length = rand.nextInt(config.messageSize);
-					data = new byte[length];
+					randomString = randomString(length);
+					data = randomString.getBytes();
 				}
 				bytesSent += data.length;
 					
-				ProducerData<byte[], byte[]> producerData = new ProducerData<byte[], byte[]>(config.topic, data);
+				ProducerData<Message, Message> producerData = new ProducerData<Message, Message>(config.topic, new Message(data));
 				producer.send(producerData);
 				nSends += 1;
 				if (nSends % config.reportingInterval == 0) {
@@ -157,12 +159,23 @@ public class ProducerPerformance {
 		
 	}
 	
+	private static Random random = new Random();
+	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	public static String randomString(int len ) 
+	{
+	   StringBuilder sb = new StringBuilder( len );
+	   for( int i = 0; i < len; i++ ) 
+	      sb.append( AB.charAt( random.nextInt(AB.length()) ) );
+	   return sb.toString();
+	}
+	
 	
 	static class ProducerPerfConfig extends PerfConfig {
 		
 		protected static ArgumentAcceptingOptionSpec<String> brokerInfoOpt = parser.accepts("brokerinfo", "REQUIRED: broker info list.")
 															        .withRequiredArg().
-															        describedAs("broker.list=brokerid1:hostname1:port1,brokerid2:hostname2:port2")
+															        describedAs("brokerid1:hostname1:port1,brokerid2:hostname2:port2")
 															        .ofType(String.class);
 
 		protected static ArgumentAcceptingOptionSpec<Integer> messageSizeOpt = parser.accepts("message-size", "The size of each message.")

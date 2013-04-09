@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.log4j.Logger;
 
-import com.leansoft.luxun.api.generated.Constants;
 import com.leansoft.luxun.common.exception.ConsumerTimeoutException;
 import com.leansoft.luxun.consumer.StreamFactory;
 import com.leansoft.luxun.consumer.ConsumerConfig;
@@ -21,7 +20,6 @@ import com.leansoft.luxun.utils.ImmutableMap;
 
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionSet;
-import joptsimple.OptionSpecBuilder;
 
 public class ConsumerPerformance {
 	
@@ -170,7 +168,7 @@ public class ConsumerPerformance {
 		protected static ArgumentAcceptingOptionSpec<String> brokerInfoOpt = parser.accepts("brokerinfo", "REQUIRED: broker info list to consume from." +
 		                       "Multiple brokers can be given to allow concurrent concuming")
 		        .withRequiredArg().
-		        describedAs("broker.list=brokerid1:hostname1:port1,brokerid2:hostname2:port2")
+		        describedAs("brokerid1:hostname1:port1,brokerid2:hostname2:port2")
 		        .ofType(String.class);
 		
 		protected static ArgumentAcceptingOptionSpec<String> groupIdOpt = 
@@ -186,10 +184,6 @@ public class ConsumerPerformance {
 						        describedAs("size")
 						        .ofType(Integer.class)
 						        .defaultsTo(1024 * 1024);
-		
-		protected static OptionSpecBuilder resetBeginningIndexOpt = parser.accepts("from-latest", 
-				"If the consumer does not already have an established " +
-		   "index to consume from, start with the latest message present in the log rather than the earliest message.");
 		
 		protected static ArgumentAcceptingOptionSpec<Integer> numThreadsOpt = 
 			parser.accepts("threads", "Number of processing threads.")
@@ -212,7 +206,6 @@ public class ConsumerPerformance {
 	        Properties props = new Properties();
 	        props.put("groupid", options.valueOf(groupIdOpt));
 	        props.put("fetch.size", String.valueOf(options.valueOf(fetchSizeOpt)));
-	        props.put("autoindex.reset", options.has(resetBeginningIndexOpt) ?  Constants.LATEST_INDEX_STRING : Constants.EARLIEST_INDEX_STRING);
 	        props.put("broker.list", options.valueOf(brokerInfoOpt));
 	        props.put("consumer.timeout.ms", "5000");
 
