@@ -260,6 +260,14 @@
 	              <mainClass>com.leansoft.luxun.perf.ProducerPerformance</mainClass>
 	              <name>producer-perf-test</name>
 	            </program>
+	           	<program>
+	              <mainClass>com.leansoft.luxun.perf.ConsumerPerformance</mainClass>
+	              <name>consumer-perf-test</name>
+	            </program>
+	           	<program>
+	              <mainClass>com.leansoft.luxun.perf.SimpleConsumerPerformance</mainClass>
+	              <name>simple-consumer-perf-test</name>
+	            </program>
 	          </programs>
 		      <assembleDirectory>${project.build.directory}/luxun</assembleDirectory>
 		      <repositoryName>lib</repositoryName>

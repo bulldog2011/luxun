@@ -78,7 +78,7 @@ public class LogManager implements Closeable, QueueService.Iface  {
     
     final Map<String, Long> logRetentionMSMap;
     
-    final int logRetentionSize;
+    final long logRetentionSize;
     
     private final int maxMessageSize;
     private final int logPageSize;

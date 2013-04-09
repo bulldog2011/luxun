@@ -115,6 +115,21 @@ public class Utils {
         }
         throw new IllegalArgumentException("Missing required property '" + name + "'");
     }
+    
+    public static long getLong(Properties props, String name, long defaultValue) {
+        return getLongInRange(props, name, defaultValue, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+    
+    public static long getLongInRange(Properties props, String name, long defaultValue, long min, long max) {
+        long v = defaultValue;
+        if (props.containsKey(name)) {
+            v = Long.valueOf(props.getProperty(name));
+        }
+        if (v >= min && v <= max) {
+            return v;
+        }
+        throw new IllegalArgumentException(name + " has value " + v + " which is not in the range");
+    }
 
     public static int getInt(Properties props, String name, int defaultValue) {
         return getIntInRange(props, name, defaultValue, Integer.MIN_VALUE, Integer.MAX_VALUE);
