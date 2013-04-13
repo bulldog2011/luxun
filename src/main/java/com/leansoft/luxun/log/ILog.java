@@ -21,9 +21,12 @@ import java.io.Closeable;
 //import java.util.Collections;
 //import java.util.List;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 import com.leansoft.bigqueue.BigArrayImpl;
+import com.leansoft.bigqueue.FanOutQueueImplEx.BatchReadResult;
 
 
 /**
@@ -58,6 +61,16 @@ public interface ILog extends Closeable {
      * @throws IOException exception thrown during the operation
      */
     byte[] read(String fanoutId) throws IOException;
+    
+    /**
+     * read a list of data up to a maxFetchSize from log by fanout id
+     * 
+     * @param fanoutId fanout identifier
+     * @param maxFetchSize max size in bytes to fetch
+     * @return a list of binary data with total fetched size
+     * @throws IOException exception thrown during the operation
+     */
+    BatchReadResult batchRead(String fanoutId, int maxFetchSize) throws IOException;
     
     /**
      * get length of item from log by index

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
@@ -13,6 +14,7 @@ import java.util.concurrent.locks.Lock;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 
+import com.leansoft.bigqueue.FanOutQueueImplEx.BatchReadResult;
 import com.leansoft.luxun.api.generated.Constants;
 import com.leansoft.luxun.api.generated.ConsumeRequest;
 import com.leansoft.luxun.api.generated.ConsumeResponse;
@@ -371,17 +373,9 @@ public class LogManager implements Closeable, QueueService.Iface  {
 								} else {
 									int totalFetchedSize = 0;
 									if (maxFetchSize > 0) { // batch fetch
-										while(!log.isEmpty(fanoutId)) {
-											
-											int length = log.getItemLength(fanoutId);
-											if (totalFetchedSize + length > maxFetchSize) {
-												break;
-											}
-											
-											byte[] item = log.read(fanoutId);
-											response.addToItemList(ByteBuffer.wrap(item));
-											totalFetchedSize += length;
-										} 
+										BatchReadResult batchReadResult = log.batchRead(fanoutId, maxFetchSize);
+										response.setItemList(batchReadResult.bufferList);
+										totalFetchedSize = batchReadResult.totalFetchedSize;
 									} else { // fetch one item
 										byte[] item = log.read(fanoutId);
 										response.addToItemList(ByteBuffer.wrap(item));
