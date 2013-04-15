@@ -42,6 +42,7 @@ public class SimpleConsumeByFanoutIdLoadTest {
 	@Before
 	public void setup() {
 		Properties props1 = TestUtils.createBrokerConfig(brokerId, port);
+		props1.setProperty("log.flush.count", "1000");
 		ServerConfig config1 = new ServerConfig(props1);
 		server = TestUtils.createServer(config1);
 	}

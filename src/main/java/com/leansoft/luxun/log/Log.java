@@ -11,7 +11,9 @@ import java.util.concurrent.locks.Lock;
 import org.apache.log4j.Logger;
 
 import com.leansoft.bigqueue.FanOutQueueImplEx;
+import com.leansoft.bigqueue.FanOutQueueImplEx.BatchReadResult;
 import com.leansoft.bigqueue.IFanOutQueueEx;
+import com.leansoft.luxun.common.annotations.NotThreadSafe;
 import com.leansoft.luxun.common.exception.MessageSizeTooLargeException;
 import com.leansoft.luxun.mx.BrokerTopicStat;
 import com.leansoft.luxun.mx.LogFlushStats;
@@ -242,5 +244,12 @@ public class Log implements ILog {
 	@Override
 	public int getNumberOfBackFiles() {
 		return this.foQueue.getNumberOfBackFiles();
+	}
+
+	@Override
+	@NotThreadSafe
+	public BatchReadResult batchRead(String fanoutId, int maxFetchSize)
+			throws IOException {
+		return this.foQueue.batchDequeue(fanoutId, maxFetchSize);
 	}
 }
