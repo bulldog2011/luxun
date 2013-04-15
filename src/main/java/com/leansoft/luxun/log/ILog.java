@@ -18,11 +18,7 @@
 package com.leansoft.luxun.log;
 
 import java.io.Closeable;
-//import java.util.Collections;
-//import java.util.List;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 import com.leansoft.bigqueue.BigArrayImpl;

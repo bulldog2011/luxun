@@ -42,6 +42,8 @@ public class SimpleConsumeByIndexLoadTest {
 	@Before
 	public void setup() {
 		Properties props1 = TestUtils.createBrokerConfig(brokerId, port);
+		props1.setProperty("log.default.flush.interval.ms", "1000");
+		props1.setProperty("log.default.flush.scheduler.interval.ms", "200");
 		ServerConfig config1 = new ServerConfig(props1);
 		server1 = TestUtils.createServer(config1);
 	}
