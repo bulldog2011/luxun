@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
@@ -38,7 +39,7 @@ public class Log implements ILog {
 	
 	final boolean needRecovery;
 	
-    private final Object flushLock = new Object();
+    private final AtomicBoolean flushLock = new AtomicBoolean(false);
 	
 	private final AtomicInteger unflushed = new AtomicInteger(0);
 	
@@ -160,14 +161,17 @@ public class Log implements ILog {
 	public void flush() {
 		if (unflushed.get() == 0) return; // nothing to flush
 		
-		synchronized(flushLock) {
-			if (unflushed.get() == 0) return; // double check
-			long startTime = System.currentTimeMillis();
-			this.foQueue.flush();
-			long elapsedTime = System.currentTimeMillis() - startTime;
-			LogFlushStats.recordFlushRequest(elapsedTime);
-			unflushed.set(0);
-			lastflushedTime.set(System.currentTimeMillis());
+		if (flushLock.compareAndSet(false, true)) {
+			try {
+				long startTime = System.currentTimeMillis();
+				this.foQueue.flush();
+				long elapsedTime = System.currentTimeMillis() - startTime;
+				LogFlushStats.recordFlushRequest(elapsedTime);
+				unflushed.set(0);
+				lastflushedTime.set(System.currentTimeMillis());
+			} finally {
+				flushLock.set(false);
+			}
 		}
 	}
 
