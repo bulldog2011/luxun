@@ -328,6 +328,26 @@ public class LogManager implements Closeable, QueueService.Iface  {
 		
 		return response;
 	}
+	
+	@Override
+	public void asyncProduce(ProduceRequest produceRequest) throws TException {
+		long start = System.nanoTime();
+		
+		try {
+			String topic = produceRequest.getTopic();
+			final ILog log = this.getOrCreateLog(topic);
+			long messageSize = produceRequest.getItem().length;
+			log.append(produceRequest.getItem());
+			
+			BrokerTopicStat.getInstance(topic).recordBytesIn(messageSize);
+			BrokerTopicStat.getBrokerAllTopicStat().recordBytesIn(messageSize);
+		} catch (Exception e) {
+			BrokerTopicStat.getInstance(produceRequest.getTopic()).recordFailedProduceRequest();
+			BrokerTopicStat.getBrokerAllTopicStat().recordFailedProduceRequest();
+		}
+		
+		stats.recordRequest(ProduceRequest.class, System.nanoTime() - start);
+	}
 
 	@Override
 	public ConsumeResponse consume(ConsumeRequest consumeRequest)

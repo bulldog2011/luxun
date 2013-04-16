@@ -26,6 +26,8 @@ public class QueueService {
 
     public ProduceResponse produce(ProduceRequest produceRequest) throws org.apache.thrift.TException;
 
+    public void asyncProduce(ProduceRequest produceRequest) throws org.apache.thrift.TException;
+
     public ConsumeResponse consume(ConsumeRequest consumeRequest) throws org.apache.thrift.TException;
 
     public FindClosestIndexByTimeResponse findClosestIndexByTime(FindClosestIndexByTimeRequest findClosestIndexByTimeRequest) throws org.apache.thrift.TException;
@@ -39,6 +41,8 @@ public class QueueService {
   public interface AsyncIface {
 
     public void produce(ProduceRequest produceRequest, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.produce_call> resultHandler) throws org.apache.thrift.TException;
+
+    public void asyncProduce(ProduceRequest produceRequest, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.asyncProduce_call> resultHandler) throws org.apache.thrift.TException;
 
     public void consume(ConsumeRequest consumeRequest, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.consume_call> resultHandler) throws org.apache.thrift.TException;
 
@@ -121,6 +125,21 @@ public class QueueService {
         return result.success;
       }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "produce failed: unknown result");
+    }
+
+    public void asyncProduce(ProduceRequest produceRequest) throws org.apache.thrift.TException
+    {
+      send_asyncProduce(produceRequest);
+    }
+
+    public void send_asyncProduce(ProduceRequest produceRequest) throws org.apache.thrift.TException
+    {
+      oprot_.writeMessageBegin(new org.apache.thrift.protocol.TMessage("asyncProduce", org.apache.thrift.protocol.TMessageType.CALL, ++seqid_));
+      asyncProduce_args args = new asyncProduce_args();
+      args.setProduceRequest(produceRequest);
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
     }
 
     public ConsumeResponse consume(ConsumeRequest consumeRequest) throws org.apache.thrift.TException
@@ -317,6 +336,37 @@ public class QueueService {
       }
     }
 
+    public void asyncProduce(ProduceRequest produceRequest, org.apache.thrift.async.AsyncMethodCallback<asyncProduce_call> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      asyncProduce_call method_call = new asyncProduce_call(produceRequest, resultHandler, this, protocolFactory, transport);
+      this.currentMethod = method_call;
+      manager.call(method_call);
+    }
+
+    public static class asyncProduce_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private ProduceRequest produceRequest;
+      public asyncProduce_call(ProduceRequest produceRequest, org.apache.thrift.async.AsyncMethodCallback<asyncProduce_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, true);
+        this.produceRequest = produceRequest;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("asyncProduce", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        asyncProduce_args args = new asyncProduce_args();
+        args.setProduceRequest(produceRequest);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public void getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+      }
+    }
+
     public void consume(ConsumeRequest consumeRequest, org.apache.thrift.async.AsyncMethodCallback<consume_call> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       consume_call method_call = new consume_call(consumeRequest, resultHandler, this, protocolFactory, transport);
@@ -453,6 +503,7 @@ public class QueueService {
     {
       iface_ = iface;
       processMap_.put("produce", new produce());
+      processMap_.put("asyncProduce", new asyncProduce());
       processMap_.put("consume", new consume());
       processMap_.put("findClosestIndexByTime", new findClosestIndexByTime());
       processMap_.put("deleteTopic", new deleteTopic());
@@ -508,6 +559,27 @@ public class QueueService {
         oprot.getTransport().flush();
       }
 
+    }
+
+    private class asyncProduce implements ProcessFunction {
+      public void process(int seqid, org.apache.thrift.protocol.TProtocol iprot, org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException
+      {
+        asyncProduce_args args = new asyncProduce_args();
+        try {
+          args.read(iprot);
+        } catch (org.apache.thrift.protocol.TProtocolException e) {
+          iprot.readMessageEnd();
+          org.apache.thrift.TApplicationException x = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("asyncProduce", org.apache.thrift.protocol.TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
+        iprot.readMessageEnd();
+        iface_.asyncProduce(args.produceRequest);
+        return;
+      }
     }
 
     private class consume implements ProcessFunction {
@@ -1177,6 +1249,301 @@ public class QueueService {
         sb.append("null");
       } else {
         sb.append(this.success);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+  }
+
+  public static class asyncProduce_args implements org.apache.thrift.TBase<asyncProduce_args, asyncProduce_args._Fields>, java.io.Serializable, Cloneable   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("asyncProduce_args");
+
+    private static final org.apache.thrift.protocol.TField PRODUCE_REQUEST_FIELD_DESC = new org.apache.thrift.protocol.TField("produceRequest", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private ProduceRequest produceRequest;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      PRODUCE_REQUEST((short)1, "produceRequest");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // PRODUCE_REQUEST
+            return PRODUCE_REQUEST;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.PRODUCE_REQUEST, new org.apache.thrift.meta_data.FieldMetaData("produceRequest", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, ProduceRequest.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(asyncProduce_args.class, metaDataMap);
+    }
+
+    public asyncProduce_args() {
+    }
+
+    public asyncProduce_args(
+      ProduceRequest produceRequest)
+    {
+      this();
+      this.produceRequest = produceRequest;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public asyncProduce_args(asyncProduce_args other) {
+      if (other.isSetProduceRequest()) {
+        this.produceRequest = new ProduceRequest(other.produceRequest);
+      }
+    }
+
+    public asyncProduce_args deepCopy() {
+      return new asyncProduce_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.produceRequest = null;
+    }
+
+    public ProduceRequest getProduceRequest() {
+      return this.produceRequest;
+    }
+
+    public void setProduceRequest(ProduceRequest produceRequest) {
+      this.produceRequest = produceRequest;
+    }
+
+    public void unsetProduceRequest() {
+      this.produceRequest = null;
+    }
+
+    /** Returns true if field produceRequest is set (has been assigned a value) and false otherwise */
+    public boolean isSetProduceRequest() {
+      return this.produceRequest != null;
+    }
+
+    public void setProduceRequestIsSet(boolean value) {
+      if (!value) {
+        this.produceRequest = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case PRODUCE_REQUEST:
+        if (value == null) {
+          unsetProduceRequest();
+        } else {
+          setProduceRequest((ProduceRequest)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case PRODUCE_REQUEST:
+        return getProduceRequest();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case PRODUCE_REQUEST:
+        return isSetProduceRequest();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof asyncProduce_args)
+        return this.equals((asyncProduce_args)that);
+      return false;
+    }
+
+    public boolean equals(asyncProduce_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_produceRequest = true && this.isSetProduceRequest();
+      boolean that_present_produceRequest = true && that.isSetProduceRequest();
+      if (this_present_produceRequest || that_present_produceRequest) {
+        if (!(this_present_produceRequest && that_present_produceRequest))
+          return false;
+        if (!this.produceRequest.equals(that.produceRequest))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(asyncProduce_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      asyncProduce_args typedOther = (asyncProduce_args)other;
+
+      lastComparison = Boolean.valueOf(isSetProduceRequest()).compareTo(typedOther.isSetProduceRequest());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetProduceRequest()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.produceRequest, typedOther.produceRequest);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      org.apache.thrift.protocol.TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == org.apache.thrift.protocol.TType.STOP) { 
+          break;
+        }
+        switch (field.id) {
+          case 1: // PRODUCE_REQUEST
+            if (field.type == org.apache.thrift.protocol.TType.STRUCT) {
+              this.produceRequest = new ProduceRequest();
+              this.produceRequest.read(iprot);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+      validate();
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.produceRequest != null) {
+        oprot.writeFieldBegin(PRODUCE_REQUEST_FIELD_DESC);
+        this.produceRequest.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("asyncProduce_args(");
+      boolean first = true;
+
+      sb.append("produceRequest:");
+      if (this.produceRequest == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.produceRequest);
       }
       first = false;
       sb.append(")");

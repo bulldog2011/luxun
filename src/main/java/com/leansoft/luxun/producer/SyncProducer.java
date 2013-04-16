@@ -8,11 +8,7 @@ import java.util.Random;
 import org.apache.thrift.TException;
 
 import com.leansoft.luxun.api.generated.ProduceRequest;
-import com.leansoft.luxun.api.generated.ProduceResponse;
-import com.leansoft.luxun.api.generated.Result;
-import com.leansoft.luxun.api.generated.ResultCode;
 import com.leansoft.luxun.client.AbstractClient;
-import com.leansoft.luxun.common.exception.ErrorMapper;
 import com.leansoft.luxun.common.exception.MessageSizeTooLargeException;
 import com.leansoft.luxun.message.MessageList;
 import com.leansoft.luxun.mx.SyncProducerStats;
@@ -58,12 +54,15 @@ public class SyncProducer extends AbstractClient {
 			long startTime = System.nanoTime();
 			getOrMakeConnection();
 			try {
-				ProduceResponse produceResponse = this.luxunClient.produce(produceRequest);
-				Result result = produceResponse.getResult();
-				if (result.getResultCode() != ResultCode.SUCCESS) {
-					RuntimeException runtimeException = ErrorMapper.toException(result.getErrorCode(), result.getErrorMessage());
-					throw runtimeException;
-				}
+				
+				this.luxunClient.asyncProduce(produceRequest);
+				
+//				ProduceResponse produceResponse = this.luxunClient.produce(produceRequest);
+//				Result result = produceResponse.getResult();
+//				if (result.getResultCode() != ResultCode.SUCCESS) {
+//					RuntimeException runtimeException = ErrorMapper.toException(result.getErrorCode(), result.getErrorMessage());
+//					throw runtimeException;
+//				}
 			} catch (TException e) {
                 // no way to tell if write succeeded. Disconnect and re-throw exception to let client handle retry
 				disconnect();

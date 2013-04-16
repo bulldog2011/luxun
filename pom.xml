@@ -383,7 +383,7 @@
 	</profile>
   </profiles>
 
-	<repositories>
+	<!-- repositories>
 		<repository>
 		  <id>github.release.repo</id>
 		  <name>Release Repository</name>
@@ -408,5 +408,5 @@
 	        <updatePolicy>always</updatePolicy>
 		  </snapshots>
 		</repository>
-	</repositories>
+	</repositories-->
 </project>
