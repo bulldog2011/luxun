@@ -512,6 +512,8 @@ public class LazyInitProducerTest extends ProducerConsumerTestHarness {
 		// resend the same ultisend
 		producer.multiSend(produceList);
 		
+		TestUtils.sleepQuietly(1000);  // give time to broker to save the messages
+		
 		List<ConsumeResponse> responses = consumer.multiConsume(fetches);
 		int index = 0;
 		for(String topic : topics) {
@@ -557,6 +559,8 @@ public class LazyInitProducerTest extends ProducerConsumerTestHarness {
 		
 		// resend the same ultisend
 		producer.multiSend(produceList);
+		
+		TestUtils.sleepQuietly(1000); // give time to broker to save the messages
 		
 		List<ConsumeResponse> responses = consumer.multiConsume(fetches);
 		int index = 0;

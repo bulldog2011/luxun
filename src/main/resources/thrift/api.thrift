@@ -90,6 +90,10 @@ struct GetSizeResponse {
 
 service QueueService {
     ProduceResponse produce(1: ProduceRequest produceRequest);
+    
+    // The 'oneway' modifier indicates that the client only makes a request and
+    // does not wait for any response at all. Oneway methods MUST be void.
+    oneway void asyncProduce(1: ProduceRequest produceRequest);
 
     ConsumeResponse consume(1: ConsumeRequest consumeRequest);
     
