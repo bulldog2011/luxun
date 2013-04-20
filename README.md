@@ -34,8 +34,9 @@ Luxun is based on the [bigqueue](https://github.com/bulldog2011/bigqueue) librar
 
 1. [The architecture and Design of a Publish & Subscribe Messaging System Tailored for Big Data Collecting & Analytics](http://bulldog2011.github.com/blog/2013/03/27/the-architecture-and-design-of-a-pub-sub-messaging-system/).
 2. [Luxun Quick Start](http://bulldog2011.github.com/blog/2013/04/03/luxun-quick-start/).
-3. [Configuration](https://github.com/bulldog2011/luxun/wiki/Configuration).
+3. [Operation & Configuration](https://github.com/bulldog2011/luxun/wiki/Operation-and-Configuration).
 4. [Performance](http://bulldog2011.github.io/blog/2013/04/20/luxun-performance-test/).
+5. [JMX Monitoring](https://github.com/bulldog2011/luxun/wiki/JMX-Monitoring).
 
 
 ##Copyright and License
