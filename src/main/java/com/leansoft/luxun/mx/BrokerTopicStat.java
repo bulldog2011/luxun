@@ -118,6 +118,6 @@ public class BrokerTopicStat implements BrokerTopicStatMBean, IMBeanName {
     }
 
     public void recordMessagesIn(int nMessages) {
-        numCumulatedBytesIn.getAndAdd(nMessages);
+    	numCumulatedMessagesIn.getAndAdd(nMessages);
     }
 }
