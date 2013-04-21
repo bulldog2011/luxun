@@ -37,6 +37,7 @@ Luxun is based on the [bigqueue](https://github.com/bulldog2011/bigqueue) librar
 3. [Operation & Configuration](https://github.com/bulldog2011/luxun/wiki/Operation-and-Configuration).
 4. [Performance](http://bulldog2011.github.io/blog/2013/04/20/luxun-performance-test/).
 5. [JMX Monitoring](https://github.com/bulldog2011/luxun/wiki/JMX-Monitoring).
+6. [Luxun - A Persistent Messaging System Tailored for Big Data Collecting & Analytics(ppt)](http://www.slideshare.net/yang75108/luxun)
 
 
 ##Copyright and License
