@@ -102,7 +102,7 @@ public class ProducerSendThread<T> extends Thread {
         				break;
         			}
     				
-    				if (callbackHandler != null) {
+    				if (callbackHandler != null && callbackHandler.afterDequeuingExistingData(item) != null) {
     					events.addAll(callbackHandler.afterDequeuingExistingData(item));
     				} else {
     					events.add(item);
@@ -128,7 +128,7 @@ public class ProducerSendThread<T> extends Thread {
         if (queue.size() > 0) {
             throw new IllegalQueueStateException("Invalid queue state! After queue shutdown, " + queue.size() + " remaining items in the queue");
         }
-        if (this.callbackHandler != null) {
+        if (this.callbackHandler != null && this.callbackHandler.lastBatchBeforeClose() != null) {
             events.addAll(callbackHandler.lastBatchBeforeClose());
         }
         return events;
