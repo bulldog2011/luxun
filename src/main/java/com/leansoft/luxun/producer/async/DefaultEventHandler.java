@@ -92,8 +92,11 @@ public class DefaultEventHandler<T> implements EventHandler<T> {
 	public void handle(List<QueueItem<T>> events, SyncProducer producer,
 			Encoder<T> encoder) {
 		List<QueueItem<T>> processedEvents = events;
-		if (this.callbackHandler != null && this.callbackHandler.beforeSendingData(events) != null) {
-			processedEvents = this.callbackHandler.beforeSendingData(events);
+		if (this.callbackHandler != null) {
+		    List<QueueItem<T>> items = this.callbackHandler.beforeSendingData(events);
+		    if (items != null) {
+    			processedEvents = items;
+		    }
 		}
 		List<ProduceRequest> collatedRequests = collate(processedEvents, encoder);
 		send(collatedRequests, producer);
