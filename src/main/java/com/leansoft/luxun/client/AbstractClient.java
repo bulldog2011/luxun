@@ -11,6 +11,7 @@ import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
 import com.leansoft.luxun.api.generated.QueueService;
+import com.leansoft.luxun.common.exception.ConnectionRefusedException;
 
 public abstract class AbstractClient implements Closeable {
 	
@@ -77,7 +78,7 @@ public abstract class AbstractClient implements Closeable {
                     logger.error(
                             "Consumer connection to " + host + ":" + port + " timing out after " + connectTimeoutMs + " ms",
                             e);
-                    throw new RuntimeException(e.getMessage(), e);
+                    throw new ConnectionRefusedException(host + ":" + port, e);
                 }
                 logger.error(
                         "Connection attempt to " + host+ ":" + port + " failed, next attempt in " + connectBackoffMs + " ms",
