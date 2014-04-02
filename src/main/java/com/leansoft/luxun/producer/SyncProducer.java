@@ -69,11 +69,13 @@ public class SyncProducer extends AbstractClient {
                 throw new RuntimeException(e);
 			}
             sentOnConnection++;
-            if (sentOnConnection >= config.reconnectCount//
-                    || (config.reconnectTimeInterval >= 0 && System.currentTimeMillis() - lastConnectionTime >= config.reconnectTimeInterval)) {
-                reconnect();
-                sentOnConnection = 0;
-                lastConnectionTime = System.currentTimeMillis();
+            if (config.getReconnectEnable()) {
+	            if (sentOnConnection >= config.reconnectCount//
+	                    || (config.reconnectTimeInterval >= 0 && System.currentTimeMillis() - lastConnectionTime >= config.reconnectTimeInterval)) {
+	                reconnect();
+	                sentOnConnection = 0;
+	                lastConnectionTime = System.currentTimeMillis();
+	            }
             }
             final long endTime = System.nanoTime();
             SyncProducerStats.recordProduceRequest(endTime - startTime);
