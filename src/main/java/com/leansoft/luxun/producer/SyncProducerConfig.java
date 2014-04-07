@@ -19,6 +19,7 @@ package com.leansoft.luxun.producer;
 
 import static com.leansoft.luxun.utils.Utils.getInt;
 import static com.leansoft.luxun.utils.Utils.getString;
+import static com.leansoft.luxun.utils.Utils.getBoolean;
 
 import java.util.Properties;
 
@@ -34,6 +35,8 @@ public class SyncProducerConfig implements SyncProducerConfigShared {
 
     final int socketTimeoutMs;
 
+    final boolean reconnectEnable;
+
     final int reconnectCount;
 
     final int reconnectTimeInterval;
@@ -44,6 +47,7 @@ public class SyncProducerConfig implements SyncProducerConfigShared {
         this.props = props;
         this.connectTimeoutMs = getInt(props, "connect.timeout.ms", 5000);
         this.socketTimeoutMs = getInt(props, "socket.timeout.ms", 60000);
+        this.reconnectEnable = getBoolean(props, "reconnect.enable", true);
         this.reconnectCount = getInt(props, "reconnect.count", 30000);
         this.reconnectTimeInterval = getInt(props, "reconnect.time.interval.ms", 1000 * 1000 * 10);
         this.maxMessageSize = getInt(props, "max.message.size", 1000 * 1000);//1MB
@@ -74,6 +78,10 @@ public class SyncProducerConfig implements SyncProducerConfigShared {
 
     public int getSocketTimeoutMs() {
         return socketTimeoutMs;
+    }
+
+    public boolean getReconnectEnable() {
+        return reconnectEnable;
     }
 
     public int getReconnectCount() {

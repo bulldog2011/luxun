@@ -113,9 +113,12 @@ public class AsyncProducer<T> implements Closeable {
             throw new QueueClosedException("Attempt to add event to a closed queue.");
     	}
     	QueueItem<T> data = new QueueItem<T>(event, topic);
-    	if (this.callbackHandler != null && this.callbackHandler.beforeEnqueue(data) != null) {
-    		data = this.callbackHandler.beforeEnqueue(data);
-    	}
+        if (this.callbackHandler != null) {
+            QueueItem<T> items = this.callbackHandler.beforeEnqueue(data);
+            if (items != null) {
+                data = items;
+            }
+        }
     	boolean added = false;
     	try {
     		if (enqueueTimeoutMs == 0) {

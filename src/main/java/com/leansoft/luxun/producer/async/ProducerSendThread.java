@@ -102,11 +102,16 @@ public class ProducerSendThread<T> extends Thread {
         				break;
         			}
     				
-    				if (callbackHandler != null && callbackHandler.afterDequeuingExistingData(item) != null) {
-    					events.addAll(callbackHandler.afterDequeuingExistingData(item));
-    				} else {
-    					events.add(item);
-    				}
+					if (callbackHandler != null) {
+						List<QueueItem<T>> items = callbackHandler.afterDequeuingExistingData(item);
+						if (items != null) {
+							events.addAll(items);
+						} else {
+							events.add(item);
+						}
+					} else {
+						events.add(item);
+					}
     				full = events.size() >= batchSize;
     			}
     			if (full || expired) {
@@ -128,8 +133,11 @@ public class ProducerSendThread<T> extends Thread {
         if (queue.size() > 0) {
             throw new IllegalQueueStateException("Invalid queue state! After queue shutdown, " + queue.size() + " remaining items in the queue");
         }
-        if (this.callbackHandler != null && this.callbackHandler.lastBatchBeforeClose() != null) {
-            events.addAll(callbackHandler.lastBatchBeforeClose());
+        if (this.callbackHandler != null) {
+            List<QueueItem<T>> items = this.callbackHandler.lastBatchBeforeClose();
+            if (items != null) {
+                events.addAll(items);
+            }
         }
         return events;
     }
@@ -143,6 +151,13 @@ public class ProducerSendThread<T> extends Thread {
                 this.eventHandler.handle(events, underlyingProducer, serializer);
             } catch (RuntimeException e) {
                 logger.error("Error in handling batch of " + events.size() + " events", e);
+				List<QueueItem<T>> unsentData = new ArrayList<QueueItem<T>>(events);
+				while (queue.size() > 0) {
+				    unsentData.add(queue.poll());
+				}
+				if (this.callbackHandler != null) {
+					this.callbackHandler.connectionRefused(e.getMessage(), unsentData);
+				}
             }
         }
     }
