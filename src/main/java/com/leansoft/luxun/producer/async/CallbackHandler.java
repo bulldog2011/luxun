@@ -89,12 +89,19 @@ public interface CallbackHandler<T> {
      * Callback to process when the connection is refused
      * 
      * @param broker the refused broker info
-     * @param unsentData the batched data that didn't send to the broker
+     * @param remainedItems the batched data that didn't send to the broker
      */
-    void connectionRefused(String broker, List<QueueItem<T>> unsentData);
+    void connectionRefused(String broker, List<QueueItem<T>> remainedItems);
 
     /**
      * Cleans up and shuts down the callback handler
      */
     void close();
+
+    /**
+     * Cleans up and shuts down the callback handler
+     * 
+     * @param remainedItems the batched data that didn't send to the broker
+     */
+    void close(List<QueueItem<T>> remainedItems);
 }

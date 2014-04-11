@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
+import com.leansoft.luxun.common.exception.ConnectionRefusedException;
 import com.leansoft.luxun.common.exception.IllegalQueueStateException;
 import com.leansoft.luxun.producer.SyncProducer;
 import com.leansoft.luxun.serializer.Encoder;
@@ -149,16 +150,18 @@ public class ProducerSendThread<T> extends Thread {
         if (events.size() > 0) {
             try {
                 this.eventHandler.handle(events, underlyingProducer, serializer);
-            } catch (RuntimeException e) {
-                logger.error("Error in handling batch of " + events.size() + " events", e);
-				List<QueueItem<T>> unsentData = new ArrayList<QueueItem<T>>(events);
+            } catch (ConnectionRefusedException e) {
+				List<QueueItem<T>> remainedItems = new ArrayList<QueueItem<T>>(events);
 				while (queue.size() > 0) {
-				    unsentData.add(queue.poll());
+				    remainedItems.add(queue.poll());
 				}
 				if (this.callbackHandler != null) {
-					this.callbackHandler.connectionRefused(e.getMessage(), unsentData);
+					this.callbackHandler.connectionRefused(e.getMessage(), remainedItems);
 				}
-            }
+			} catch (RuntimeException e) {
+				logger.error("Error in handling batch of " + events.size() + " events", e);
+				queue.addAll(events);
+			}
         }
     }
 }

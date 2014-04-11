@@ -2,12 +2,15 @@ package com.leansoft.luxun.producer.async;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.leansoft.luxun.common.exception.AsyncProducerInterruptedException;
@@ -146,7 +149,16 @@ public class AsyncProducer<T> implements Closeable {
 	@Override
 	public void close() throws IOException {
 		if (this.callbackHandler != null) {
-			callbackHandler.close();
+			if (queue.size() > 0) {
+				logger.info("Remained Queue Size: " + queue.size());
+				List<QueueItem<T>> remainedItems = new ArrayList<QueueItem<T>>();
+				while (queue.size() > 0) {
+				    remainedItems.add(queue.poll());
+				}
+				callbackHandler.close(remainedItems);
+			} else {
+				callbackHandler.close();
+			}
 		}
 		closed.set(true);
 		try {
