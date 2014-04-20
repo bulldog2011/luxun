@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.sohu.jafka.common;
+package com.leansoft.luxun.common.exception;
 
 public class ConnectionRefusedException extends RuntimeException {
 
