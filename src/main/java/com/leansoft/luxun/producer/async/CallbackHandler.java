@@ -52,10 +52,11 @@ public interface CallbackHandler<T> {
      * queue of the asynchronous producer
      * 
      * @param data the data sent to the producer
+     * @param remainSize the size of the remained data in blocking queue
      * @param added flag that indicates if the data was successfully added
      *        to the queue
      */
-    QueueItem<T> afterEnqueue(QueueItem<T> data, boolean added);
+    QueueItem<T> afterEnqueue(QueueItem<T> data, int remainSize, boolean added);
 
     /**
      * Callback to process the data item right after it has been dequeued
