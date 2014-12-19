@@ -47,6 +47,8 @@ public class ConsumerConfig {
 
     private int socketTimeoutMs;
 
+    private int connectTimeoutMs;
+
 //    private int socketBufferSize;
 
     private int fetchSize;
@@ -87,6 +89,7 @@ public class ConsumerConfig {
         this.groupId = Utils.getString(props, "groupid");
         this.consumerId = Utils.getString(props, "consumerid", null);
         this.socketTimeoutMs = get("socket.timeout.ms", 30 * 1000);
+        this.connectTimeoutMs = get("connect.timeout.ms", 60 * 1000);
 //        this.socketBufferSize = get("socket.buffersize", 64 * 1024);//64KB
         this.fetchSize = get("fetch.size", 1024 * 1024);//1MB
         this.fetchBackoffMs = get("fetcher.backoff.ms", 1000);
@@ -138,6 +141,11 @@ public class ConsumerConfig {
     /** the socket timeout for network requests */
     public int getSocketTimeoutMs() {
         return socketTimeoutMs;
+    }
+
+    /** the connect timeout for network requests */
+    public int getConnectTimeoutMs() {
+      return connectTimeoutMs;
     }
 
 //    /** the socket receive buffer for network requests */

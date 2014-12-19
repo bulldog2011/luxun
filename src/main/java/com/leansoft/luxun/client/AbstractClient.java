@@ -76,7 +76,7 @@ public abstract class AbstractClient implements Closeable {
 				long endTimeMs = System.currentTimeMillis();
                 if ((endTimeMs - beginTimeMs + connectBackoffMs) > connectTimeoutMs) {
                     logger.error(
-                            "Consumer connection to " + host + ":" + port + " timing out after " + connectTimeoutMs + " ms",
+                            "Connection attempt to " + host + ":" + port + " timing out after " + connectTimeoutMs + " ms",
                             e);
                     throw new ConnectionRefusedException(host + ":" + port, e);
                 }

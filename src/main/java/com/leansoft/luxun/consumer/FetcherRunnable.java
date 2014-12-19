@@ -47,12 +47,12 @@ public class FetcherRunnable extends Thread {
         super(name + "-" + threadIndex.getAndIncrement());
         this.config = config;
         this.topicInfo = topicInfo;
-        this.simpleConsumer = new SimpleConsumer(topicInfo.broker.host, topicInfo.broker.port, config.getSocketTimeoutMs());
+        this.simpleConsumer = new SimpleConsumer(topicInfo.broker.host, topicInfo.broker.port, config.getSocketTimeoutMs(), config.getConnectTimeoutMs());
     }
     
     @Override
     public void run() {
-        logger.info(String.format("%s comsume at %s:%d with %s", getName(), topicInfo.broker.host, topicInfo.broker.port, topicInfo.topic));
+        logger.info(String.format("%s consume at %s:%d with %s", getName(), topicInfo.broker.host, topicInfo.broker.port, topicInfo.topic));
         
         try {
         	final long maxFetchBackoffMs = config.getMaxFetchBackoffMs();
@@ -78,7 +78,7 @@ public class FetcherRunnable extends Thread {
         	}
         }
         
-        logger.info("stopping fetcher " + getName() + " to borker " + topicInfo.broker);
+        logger.info("stopping fetcher " + getName() + " to broker " + topicInfo.broker);
         simpleConsumer.close();
         shutdownComplete();
     }

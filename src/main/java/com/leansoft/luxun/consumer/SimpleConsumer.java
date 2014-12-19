@@ -37,7 +37,11 @@ public class SimpleConsumer extends AbstractClient {
     public SimpleConsumer(String host, int port, int soTimeout) {
     	super(host, port, soTimeout);
     }
-    
+
+    public SimpleConsumer(String host, int port, int soTimeout, int connectTimeout) {
+      super(host, port, soTimeout, connectTimeout);
+    }
+
     public long findClosestIndexByTime( String topic, long timeStamp) throws TException {
     	FindClosestIndexByTimeRequest request = new FindClosestIndexByTimeRequest();
     	request.setTopic(topic);
