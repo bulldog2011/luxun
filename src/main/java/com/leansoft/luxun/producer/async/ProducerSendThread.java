@@ -160,7 +160,12 @@ public class ProducerSendThread<T> extends Thread {
 				}
 			} catch (RuntimeException e) {
 				logger.error("Error in handling batch of " + events.size() + " events", e);
-				queue.addAll(events);
+				try {
+					queue.addAll(events);
+				} catch (Exception ex) {
+					logger.error("Event queue is full, retry send events", ex);
+					tryToHandle(events);
+				}
 			}
         }
     }
