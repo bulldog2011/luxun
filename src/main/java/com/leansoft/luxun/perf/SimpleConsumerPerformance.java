@@ -3,7 +3,8 @@ package com.leansoft.luxun.perf;
 import java.net.URI;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.api.generated.Constants;
 import com.leansoft.luxun.consumer.SimpleConsumer;
@@ -16,7 +17,7 @@ import joptsimple.OptionSpecBuilder;
 
 public class SimpleConsumerPerformance {
 	
-	private static final Logger logger = Logger.getLogger(SimpleConsumerPerformance.class);
+	private static final Logger logger = LoggerFactory.getLogger(SimpleConsumerPerformance.class);
 	
     public static void main(String[] args) {
     	try {

@@ -34,7 +34,7 @@ public class SimpleConsumeByFanoutIdPerfTest {
 	private int port = 9092;
 	private int brokerId = 0;
 	private LuxunServer server = null;
-	private String brokerList = brokerId + ":localhost:" + port;
+	private String brokerList = brokerId + ":127.0.0.1:" + port;
 	
 	@Before
 	public void setup() {
@@ -193,7 +193,7 @@ public class SimpleConsumeByFanoutIdPerfTest {
 		
 		AtomicInteger groupAItemCount = new AtomicInteger(0);
 		for(int i = 0; i < consumerGroupANum; i++) {
-			SimpleConsumer simpleConsumer = new SimpleConsumer("localhost", 9092, 60000);
+			SimpleConsumer simpleConsumer = new SimpleConsumer("127.0.0.1", 9092, 60000);
 			groupAConsumers[i] = simpleConsumer;
 			SequentialConsumerThread c = new SequentialConsumerThread(allLatch, consumerResults, "group-a", simpleConsumer, topic, groupAItemCount);
 			c.start();
@@ -201,7 +201,7 @@ public class SimpleConsumeByFanoutIdPerfTest {
 		
 		AtomicInteger groupBItemCount = new AtomicInteger(0);
 		for(int i = 0; i < consumerGroupBNum; i++) {
-			SimpleConsumer simpleConsumer = new SimpleConsumer("localhost", 9092, 60000);
+			SimpleConsumer simpleConsumer = new SimpleConsumer("127.0.0.1", 9092, 60000);
 			groupBConsumers[i] = simpleConsumer;
 			SequentialConsumerThread c = new SequentialConsumerThread(allLatch, consumerResults, "group-b", simpleConsumer, topic, groupBItemCount);
 			c.start();

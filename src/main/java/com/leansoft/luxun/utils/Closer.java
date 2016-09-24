@@ -20,7 +20,8 @@ package com.leansoft.luxun.utils;
 import java.io.IOException;
 import java.net.Socket;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * an useful tools to close some streams or file descriptions
@@ -28,7 +29,7 @@ import org.apache.log4j.Logger;
  */
 public final class Closer {
 
-    private static final Logger closerLogger = Logger.getLogger(Closer.class);
+    private static final Logger closerLogger = LoggerFactory.getLogger(Closer.class);
 
     public static void close(java.io.Closeable closeable) throws IOException {
         close(closeable, closerLogger);

@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.api.generated.ProduceRequest;
 import com.leansoft.luxun.message.Message;
@@ -27,7 +28,7 @@ public class DefaultEventHandler<T> implements EventHandler<T> {
 
     private final CompressionCodec codec;
 
-    private final Logger logger = Logger.getLogger(DefaultEventHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(DefaultEventHandler.class);
 
     private final int numRetries;
     

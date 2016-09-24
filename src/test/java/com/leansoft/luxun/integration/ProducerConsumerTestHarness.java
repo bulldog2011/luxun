@@ -11,7 +11,7 @@ import junit.framework.TestCase;
 public abstract class ProducerConsumerTestHarness extends TestCase {
 	
 	protected int port;
-	String host = "localhost";
+	String host = "127.0.0.1";
 	SyncProducer producer = null;
 	SimpleConsumer consumer = null;
 	

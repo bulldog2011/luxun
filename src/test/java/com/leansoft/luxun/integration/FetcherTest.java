@@ -49,7 +49,7 @@ public class FetcherTest extends LuxunServerTestHarness {
 		for(ServerConfig config : configs) {
 			TopicInfo ptInfo = new TopicInfo(
 					topic,
-					new Broker(config.getBrokerId(), String.valueOf(config.getBrokerId()), "localhost", config.getPort()),
+					new Broker(config.getBrokerId(), String.valueOf(config.getBrokerId()), "127.0.0.1", config.getPort()),
 					queue
 			);
 			topicInfos.add(ptInfo);
@@ -85,7 +85,7 @@ public class FetcherTest extends LuxunServerTestHarness {
 	public int sendMessages(int messagesPerNode) {
 		int count = 0;
 		for(ServerConfig conf : configs) {
-			SyncProducer producer = TestUtils.createProducer("localhost", conf.getPort());
+			SyncProducer producer = TestUtils.createProducer("127.0.0.1", conf.getPort());
 			MessageList messageList = new MessageList();
 	    	for(int i = 0; i < messagesPerNode; i++) {
 	    		byte[] message = String.valueOf(conf.getBrokerId() * 5  + i).getBytes();

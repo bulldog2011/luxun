@@ -37,7 +37,7 @@ public class SimpleConsumeByIndexLoadTest {
 	private int port = 9092;
 	private int brokerId = 0;
 	private LuxunServer server1 = null;
-	private String brokerList = brokerId + ":localhost:" + port;
+	private String brokerList = brokerId + ":127.0.0.1:" + port;
 	
 	@Before
 	public void setup() {
@@ -186,7 +186,7 @@ public class SimpleConsumeByIndexLoadTest {
 		}
 		
 		for(int i = 0; i < consumerNum; i++) {
-			SimpleConsumer simpleConsumer = new SimpleConsumer("localhost", 9092, 60000);
+			SimpleConsumer simpleConsumer = new SimpleConsumer("127.0.0.1", 9092, 60000);
 			consumers[i] = simpleConsumer;
 			SequentialConsumerThread c = new SequentialConsumerThread(allLatch, consumerResults, simpleConsumer, topic);
 			c.start();

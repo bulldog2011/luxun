@@ -70,7 +70,7 @@ public class AdvancedDemo {
 	private int port2 = 9093;
 	private LuxunServer server1 = null;
 	private LuxunServer server2 = null;
-	private String brokerList = brokerId1 + ":localhost:" + port1 + "," + brokerId2 + ":localhost:" + port2;
+	private String brokerList = brokerId1 + ":127.0.0.1:" + port1 + "," + brokerId2 + ":127.0.0.1:" + port2;
 	
 	@Before
 	public void setup() {

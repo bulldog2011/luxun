@@ -9,7 +9,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.broker.Broker;
 import com.leansoft.luxun.common.annotations.ClientSide;
@@ -52,7 +53,7 @@ public class ProducerPool<V> implements Closeable {
     
     private final Set<String> compressedTopics;
 
-    private final Logger logger = Logger.getLogger(ProducerPool.class);
+    private final Logger logger = LoggerFactory.getLogger(ProducerPool.class);
 
     public ProducerPool(ProducerConfig config,//
             Encoder<V> serializer, //

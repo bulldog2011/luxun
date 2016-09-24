@@ -3,7 +3,8 @@ package com.leansoft.luxun.consumer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.common.annotations.ClientSide;
 
@@ -17,7 +18,7 @@ public class Fetcher {
 
     private final ConsumerConfig config;
     
-    private final Logger logger = Logger.getLogger(Fetcher.class);
+    private final Logger logger = LoggerFactory.getLogger(Fetcher.class);
 
     private volatile List<FetcherRunnable> fetcherThreads = new ArrayList<FetcherRunnable>(0);
     

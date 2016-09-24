@@ -63,7 +63,7 @@ public class PrimitiveApiTest extends ProducerConsumerTestHarness {
 		String topic = "test-topic";
 		Properties props = new Properties();
 	    props.put("serializer.class", "com.leansoft.luxun.serializer.StringEncoder");
-	    props.put("broker.list", "0:localhost:" + port);
+	    props.put("broker.list", "0:127.0.0.1:" + port);
 	    ProducerConfig config = new ProducerConfig(props);
 	    
 	    StringProducer stringProducer1 = new StringProducer(config);
@@ -83,7 +83,7 @@ public class PrimitiveApiTest extends ProducerConsumerTestHarness {
 		String topic = "test-topic";
 		Properties props = new Properties();
 	    props.put("serializer.class", "com.leansoft.luxun.serializer.StringEncoder");
-	    props.put("broker.list", "0:localhost:" + port);
+	    props.put("broker.list", "0:127.0.0.1:" + port);
 	    ProducerConfig config = new ProducerConfig(props);
 	    
 	    StringProducer stringProducer1 = new StringProducer(config);
@@ -129,7 +129,7 @@ public class PrimitiveApiTest extends ProducerConsumerTestHarness {
 		String topic = "test-topic";
 		Properties props = new Properties();
 	    props.put("serializer.class", "com.leansoft.luxun.serializer.StringEncoder");
-	    props.put("broker.list", "0:localhost:" + port);
+	    props.put("broker.list", "0:127.0.0.1:" + port);
 	    props.put("compression.codec", "1"); // GZIP
 	    ProducerConfig config = new ProducerConfig(props);
 	    
@@ -151,7 +151,7 @@ public class PrimitiveApiTest extends ProducerConsumerTestHarness {
 		String topic = "test-topic";
 		Properties props = new Properties();
 	    props.put("serializer.class", "com.leansoft.luxun.serializer.StringEncoder");
-	    props.put("broker.list", "0:localhost:" + port);
+	    props.put("broker.list", "0:127.0.0.1:" + port);
 	    props.put("compression.codec", "1"); // GZIP
 	    ProducerConfig config = new ProducerConfig(props);
 	    

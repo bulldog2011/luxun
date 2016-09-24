@@ -5,7 +5,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.thrift.TException;
 
 import com.leansoft.luxun.api.generated.ConsumeRequest;
@@ -35,7 +37,7 @@ public class FetcherRunnable extends Thread {
 
     private final TopicInfo topicInfo;
 
-    private final Logger logger = Logger.getLogger(FetcherRunnable.class);
+    private final Logger logger = LoggerFactory.getLogger(FetcherRunnable.class);
 
     private final static AtomicInteger threadIndex = new AtomicInteger(0);
     

@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.log.LogManager;
-import com.leansoft.luxun.mx.Log4jController;
 import com.leansoft.luxun.mx.ServerInfo;
 import com.leansoft.luxun.mx.ThriftServerStats;
 import com.leansoft.luxun.utils.Mx4jLoader;
@@ -26,7 +26,7 @@ public class LuxunServer implements Closeable {
 	
     final String CLEAN_SHUTDOWN_FILE = ".luxun_cleanshutdown";
 
-    final private Logger logger = Logger.getLogger(LuxunServer.class);
+    final private Logger logger = LoggerFactory.getLogger(LuxunServer.class);
 
     public final ServerConfig config;
 
@@ -44,7 +44,6 @@ public class LuxunServer implements Closeable {
     private final File logDir;
 
     private final ServerInfo serverInfo = new ServerInfo();
-    private final Log4jController log4jController = new Log4jController();
 
     public LuxunServer(ServerConfig config) {
         this.config = config;
@@ -61,7 +60,6 @@ public class LuxunServer implements Closeable {
             logger.info("Starting luxun server " + serverInfo.getVersion());
     		
             Utils.registerMBean(serverInfo);
-            Utils.registerMBean(log4jController);
             
             boolean needRecovery = true;
             File cleanShutDownFile = new File(new File(config.getLogDir()), CLEAN_SHUTDOWN_FILE);
@@ -85,7 +83,7 @@ public class LuxunServer implements Closeable {
             serverInfo.started();
             logger.info("Server started.");
     	} catch (Exception ex) {
-            logger.fatal("Fatal error during startup.", ex);
+            logger.error("Fatal error during startup.", ex);
             try {
 				close();
 			} catch (IOException e) {
@@ -112,11 +110,10 @@ public class LuxunServer implements Closeable {
 				File cleanShutDownFile = new File(new File(config.getLogDir()), CLEAN_SHUTDOWN_FILE);
 				cleanShutDownFile.createNewFile();
 			} catch (Exception ex) {
-				logger.fatal(ex.getMessage(), ex);
+				logger.error(ex.getMessage(), ex);
 			}
 			shutdownLatch.countDown();
 			logger.info("shutdown luxun server completed");
-			Utils.unregisterMBean(this.log4jController);
 		}
 	}
 	

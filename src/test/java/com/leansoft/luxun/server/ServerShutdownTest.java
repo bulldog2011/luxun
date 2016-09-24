@@ -34,7 +34,7 @@ public class ServerShutdownTest {
 		Properties props = TestUtils.createBrokerConfig(0, port);
 		ServerConfig config = new ServerConfig(props);
 		
-		String host = "localhost";
+		String host = "127.0.0.1";
 		String topic = "test";
 		
 		MessageList sent1 = new MessageList();

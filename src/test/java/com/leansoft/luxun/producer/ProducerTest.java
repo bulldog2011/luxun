@@ -51,7 +51,7 @@ public class ProducerTest extends TestCase {
 	private SyncProducer producer2 = null;
 	private SimpleConsumer consumer1 = null;
 	private SimpleConsumer consumer2 = null;
-	private String brokerList = brokerId1 + ":localhost:" + port1 + "," + brokerId2 + ":localhost:" + port2;
+	private String brokerList = brokerId1 + ":127.0.0.1:" + port1 + "," + brokerId2 + ":127.0.0.1:" + port2;
 	
 	
 	@Override
@@ -66,7 +66,7 @@ public class ProducerTest extends TestCase {
 		server2 = TestUtils.createServer(config2);
 		
 	    Properties props = new Properties();
-	    props.put("host", "localhost");
+	    props.put("host", "127.0.0.1");
 	    props.put("port", String.valueOf(port1));
 
 	    producer1 = new SyncProducer(new SyncProducerConfig(props));
@@ -80,8 +80,8 @@ public class ProducerTest extends TestCase {
 	    messageList.add(new Message("test".getBytes()));
 	    producer2.send("test-topic", messageList);
 	    
-	    consumer1 = new SimpleConsumer("localhost", port1, 1000000);
-	    consumer2 = new SimpleConsumer("localhost", port2, 1000000);
+	    consumer1 = new SimpleConsumer("127.0.0.l", port1, 1000000);
+	    consumer2 = new SimpleConsumer("127.0.0.1", port2, 1000000);
 	    
 	    Thread.sleep(500);
 	}
@@ -208,7 +208,7 @@ public class ProducerTest extends TestCase {
 		ProducerPool<String> producerPool = new ProducerPool<String>(new ProducerConfig(props), new StringEncoder(), syncProducers, new ConcurrentHashMap<Integer, AsyncProducer<String>>(), null, null);
 		List<String> data = new ArrayList<String>();
 		data.add("test1");
-		producerPool.send(producerPool.buildProducerPoolData(topic, new Broker(0, "local", "localhost", 9092), data));
+		producerPool.send(producerPool.buildProducerPoolData(topic, new Broker(0, "local", "127.0.0.1", 9092), data));
 		producerPool.close();
 		
 		EasyMock.verify(syncProducer1);
@@ -241,7 +241,7 @@ public class ProducerTest extends TestCase {
 		ProducerPool<String> producerPool = new ProducerPool<String>(new ProducerConfig(props), new StringEncoder(), new ConcurrentHashMap<Integer, SyncProducer>(), asyncProducers , null, null);
 		List<String> data = new ArrayList<String>();
 		data.add("test1");
-		producerPool.send(producerPool.buildProducerPoolData(topic, new Broker(0, "local", "localhost", 9092), data));
+		producerPool.send(producerPool.buildProducerPoolData(topic, new Broker(0, "local", "127.0.0.1", 9092), data));
 		producerPool.close();
 		
 		EasyMock.verify(asyncProducer1);
@@ -267,7 +267,7 @@ public class ProducerTest extends TestCase {
 		List<String> data = new ArrayList<String>();
 		data.add("test1");
 		try {
-			producerPool.send(producerPool.buildProducerPoolData(topic, new Broker(brokerId1, brokerId1 + "", "localhost", port1), data));
+			producerPool.send(producerPool.buildProducerPoolData(topic, new Broker(brokerId1, brokerId1 + "", "127.0.0.1", port1), data));
 			fail("Should fail with UnavailableProducerException");
 		} catch (UnavailableProducerException upe) {
 			// expected
@@ -299,7 +299,7 @@ public class ProducerTest extends TestCase {
 		List<String> data = new ArrayList<String>();
 		data.add("test1");
 		try {
-			producerPool.send(producerPool.buildProducerPoolData(topic, new Broker(brokerId1, brokerId1 + "", "localhost", port1), data));
+			producerPool.send(producerPool.buildProducerPoolData(topic, new Broker(brokerId1, brokerId1 + "", "127.0.0.1", port1), data));
 			fail("Should fail with UnavailableProducerException");
 		} catch (UnavailableProducerException upe) {
 			// expected
@@ -330,7 +330,7 @@ public class ProducerTest extends TestCase {
 		Properties props = new Properties();
 		props.put("serializer.class", StringEncoder.class.getName());
 	    props.put("producer.type", "async");
-	    props.put("broker.list", brokerId1 + ":" + "localhost" + ":" + port1);
+	    props.put("broker.list", brokerId1 + ":" + "127.0.0.1" + ":" + port1);
 		
 		ProducerConfig config = new ProducerConfig(props);
 		IPartitioner<String> partitioner = new StaticPartitioner();

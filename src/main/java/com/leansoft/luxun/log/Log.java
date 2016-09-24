@@ -9,7 +9,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.bigqueue.FanOutQueueImplEx;
 import com.leansoft.bigqueue.FanOutQueueImplEx.BatchReadResult;
@@ -29,7 +30,7 @@ import com.leansoft.luxun.utils.Utils;
  */
 public class Log implements ILog {
 	
-	private final Logger logger = Logger.getLogger(Log.class);
+	private final Logger logger = LoggerFactory.getLogger(Log.class);
 	
 	public final File baseDir;
 	

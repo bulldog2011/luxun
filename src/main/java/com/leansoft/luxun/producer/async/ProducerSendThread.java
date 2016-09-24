@@ -6,7 +6,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.common.exception.ConnectionRefusedException;
 import com.leansoft.luxun.common.exception.IllegalQueueStateException;
@@ -31,7 +32,7 @@ public class ProducerSendThread<T> extends Thread {
 
     final int batchSize;
 
-    private final Logger logger = Logger.getLogger(ProducerSendThread.class);
+    private final Logger logger = LoggerFactory.getLogger(ProducerSendThread.class);
 
     private final CountDownLatch shutdownLatch = new CountDownLatch(1);
     

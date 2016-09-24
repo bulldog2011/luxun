@@ -40,7 +40,7 @@ public class MessageSizeLimitTest {
 	@Test
 	public void testSingleMessageSizeTooLarge() {
 	    Properties props = new Properties();
-	    props.put("host", "localhost");
+	    props.put("host", "127.0.0.1");
 	    props.put("port", String.valueOf(port));
 	    props.put("connect.timeout.ms", "300");
 	    props.put("reconnect.interval", "500");
@@ -63,7 +63,7 @@ public class MessageSizeLimitTest {
 	@Test
 	public void testCompressedMessageSizeTooLarge() {
 	    Properties props = new Properties();
-	    props.put("host", "localhost");
+	    props.put("host", "127.0.0.1");
 	    props.put("port", String.valueOf(port));
 	    props.put("connect.timeout.ms", "300");
 	    props.put("reconnect.interval", "500");

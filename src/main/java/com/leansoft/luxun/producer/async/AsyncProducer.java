@@ -11,7 +11,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.common.exception.AsyncProducerInterruptedException;
 import com.leansoft.luxun.common.exception.QueueClosedException;
@@ -30,7 +32,7 @@ import com.leansoft.luxun.utils.Utils;
  */
 public class AsyncProducer<T> implements Closeable {
 	
-    private final Logger logger = Logger.getLogger(AsyncProducer.class);
+    private final Logger logger = LoggerFactory.getLogger(AsyncProducer.class);
     private static final Random random = new Random();
     private static final String ProducerQueueSizeMBeanName = "luxun.producer.Producer:type=AsyncProducerQueueSizeStats";
     /////////////////////////////////////////////////////////////////////

@@ -10,7 +10,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.thrift.TException;
 
 import com.leansoft.bigqueue.FanOutQueueImplEx.BatchReadResult;
@@ -59,7 +61,7 @@ public class LogManager implements Closeable, QueueService.Iface  {
 	
 	final boolean needRecovery;
 	
-	private final Logger logger = Logger.getLogger(LogManager.class);
+	private final Logger logger = LoggerFactory.getLogger(LogManager.class);
 	
     ///////////////////////////////////////////////////////////////////////
     

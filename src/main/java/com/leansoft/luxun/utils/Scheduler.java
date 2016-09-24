@@ -23,7 +23,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A scheduler for running jobs in the background
@@ -31,7 +32,7 @@ import org.apache.log4j.Logger;
  */
 public class Scheduler {
 
-    final private Logger logger = Logger.getLogger(Scheduler.class);
+    final private Logger logger = LoggerFactory.getLogger(Scheduler.class);
 
     final AtomicLong threadId = new AtomicLong(0);
 

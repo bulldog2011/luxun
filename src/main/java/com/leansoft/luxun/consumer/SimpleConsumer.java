@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-//import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 
 import com.leansoft.luxun.api.generated.ConsumeRequest;

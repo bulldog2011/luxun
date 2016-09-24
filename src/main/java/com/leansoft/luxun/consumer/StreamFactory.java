@@ -9,7 +9,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.broker.Broker;
 import com.leansoft.luxun.broker.BrokerInfo;
@@ -30,7 +31,7 @@ public class StreamFactory implements IStreamFactory {
     
     public final static int CLOSE_TIMEOUT_IN_SECONDS = 10; // seconds
     
-    private final Logger logger = Logger.getLogger(StreamFactory.class);
+    private final Logger logger = LoggerFactory.getLogger(StreamFactory.class);
     
     private final AtomicBoolean isShuttingDown = new AtomicBoolean(false);
     
@@ -150,7 +151,7 @@ public class StreamFactory implements IStreamFactory {
         		}
                 logger.info("Comsumer shutdown completed");
             } catch (Exception e) {
-                logger.fatal("error during consumer shutdown", e);
+                logger.error("error during consumer shutdown", e);
             }
 		}
 	}

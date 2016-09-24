@@ -57,11 +57,18 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.16</version>
-    </dependency>
+     <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
+         <version>1.7.6</version>
+     </dependency>
+
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+          <version>1.7.6</version>
+          <scope>test</scope>
+      </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -83,7 +90,7 @@
 	<dependency>
 	  <groupId>com.leansoft</groupId>
 	  <artifactId>bigqueue</artifactId>
-	  <version>0.7.0</version>
+	  <version>0.7.2</version>
 	</dependency>
 	<dependency>
 		<groupId>org.apache.thrift</groupId>
@@ -383,7 +390,7 @@
 	</profile>
   </profiles>
 
-	<!-- repositories>
+	<repositories>
 		<repository>
 		  <id>github.release.repo</id>
 		  <name>Release Repository</name>
@@ -408,5 +415,5 @@
 	        <updatePolicy>always</updatePolicy>
 		  </snapshots>
 		</repository>
-	</repositories-->
+	</repositories>
 </project>

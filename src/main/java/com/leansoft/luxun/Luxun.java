@@ -4,7 +4,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.server.LuxunServer;
 import com.leansoft.luxun.server.ServerConfig;
@@ -18,7 +19,7 @@ import com.leansoft.luxun.utils.Utils;
  */
 public class Luxun implements Closeable {
 	
-    private final Logger logger = Logger.getLogger(Luxun.class);
+    private final Logger logger = LoggerFactory.getLogger(Luxun.class);
 	
 	private volatile Thread shutdownHook;
 	
@@ -46,7 +47,7 @@ public class Luxun implements Closeable {
 					server.awaitShutdown();
 					shutdownHook = null;
 				} catch (IOException e) {
-		            logger.fatal("Fatal error during MMQueue Server shutdown. Prepare to halt", e);
+		            logger.error("Fatal error during MMQueue Server shutdown. Prepare to halt", e);
 		            Runtime.getRuntime().halt(1);
 				}  catch (InterruptedException e) {
 		            logger.warn(e.getMessage(),e);

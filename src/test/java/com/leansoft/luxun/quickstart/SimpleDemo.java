@@ -32,8 +32,8 @@ public class SimpleDemo {
 	private int port2 = 9093;
 	private LuxunServer server1 = null;
 	private LuxunServer server2 = null;
-	private String brokerList = brokerId1 + ":localhost:" + port1 + "," + brokerId2 + ":localhost:" + port2;
-	private String broker1 = brokerId1 + ":localhost:" + port1;
+	private String brokerList = brokerId1 + ":127.0.0.1:" + port1 + "," + brokerId2 + ":127.0.0.1:" + port2;
+	private String broker1 = brokerId1 + ":127.0.0.1:" + port1;
 	
 	private SimpleConsumer simpleConsumer1 = null;
 	private SimpleConsumer simpleConsumer2 = null;
@@ -58,10 +58,10 @@ public class SimpleDemo {
 		server2.startup();
 		
 		// set up two simple consumers
-		// create a consumer 1 to connect to the Luxun server running on localhost, port 9092, socket timeout of 60 secs
-		simpleConsumer1 = new SimpleConsumer("localhost", port1, 60000);
-		// create a consumer 2 to connect to the Luxun server running on localhost, port 9093, socket timeout of 60 secs
-		simpleConsumer2 = new SimpleConsumer("localhost", port2, 60000);
+		// create a consumer 1 to connect to the Luxun server running on 127.0.0.1, port 9092, socket timeout of 60 secs
+		simpleConsumer1 = new SimpleConsumer("127.0.0.1", port1, 60000);
+		// create a consumer 2 to connect to the Luxun server running on 127.0.0.1, port 9093, socket timeout of 60 secs
+		simpleConsumer2 = new SimpleConsumer("127.0.0.1", port2, 60000);
 	}
 	
 	

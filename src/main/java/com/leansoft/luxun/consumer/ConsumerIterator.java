@@ -22,7 +22,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.common.annotations.NotThreadSafe;
 import com.leansoft.luxun.common.exception.ConsumerTimeoutException;
@@ -39,7 +40,7 @@ import com.leansoft.luxun.utils.IteratorTemplate;
 @NotThreadSafe
 public class ConsumerIterator<T> extends IteratorTemplate<T> {
 
-    private final Logger logger = Logger.getLogger(ConsumerIterator.class);
+    private final Logger logger = LoggerFactory.getLogger(ConsumerIterator.class);
 
     final String topic;
 

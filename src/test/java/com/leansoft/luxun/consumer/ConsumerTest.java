@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.junit.Test;
 
 import com.leansoft.luxun.LuxunServerTestHarness;
@@ -29,7 +31,7 @@ import com.leansoft.luxun.utils.Utils;
 
 public class ConsumerTest extends LuxunServerTestHarness {
 	
-	static final Logger logger = Logger.getLogger(ConsumerTest.class);
+	static final Logger logger = LoggerFactory.getLogger(ConsumerTest.class);
 	
 	int numNodes = 2;
 	String topic = "topic1";

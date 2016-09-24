@@ -48,7 +48,7 @@ public class AsyncProducerTest {
 		EasyMock.replay(basicProducer);
 		
 		Properties props = new Properties();
-	    props.put("host", "localhost");
+	    props.put("host", "127.0.0.1");
 	    props.put("port", "9092");
 	    props.put("queue.size", "10");
 	    props.put("serializer.class", "com.leansoft.luxun.serializer.StringEncoder");
@@ -86,7 +86,7 @@ public class AsyncProducerTest {
 		EasyMock.replay(basicProducer);
 		
 		Properties props = new Properties();
-	    props.put("host", "localhost");
+	    props.put("host", "127.0.0.1");
 	    props.put("port", "9092");
 	    props.put("queue.size", "10");
 	    props.put("serializer.class", "com.leansoft.luxun.serializer.StringEncoder");
@@ -128,7 +128,7 @@ public class AsyncProducerTest {
 		EasyMock.replay(basicProducer);
 		
 		Properties props = new Properties();
-	    props.put("host", "localhost");
+	    props.put("host", "127.0.0.1");
 	    props.put("port", "9092");
 	    props.put("queue.size", "10");
 	    props.put("serializer.class", "com.leansoft.luxun.serializer.StringEncoder");
@@ -168,7 +168,7 @@ public class AsyncProducerTest {
 		EasyMock.replay(basicProducer);
 		
 		Properties props = new Properties();
-	    props.put("host", "localhost");
+	    props.put("host", "127.0.0.1");
 	    props.put("port", "9092");
 	    props.put("queue.size", "10");
 	    props.put("serializer.class", "com.leansoft.luxun.serializer.StringEncoder");
@@ -191,7 +191,7 @@ public class AsyncProducerTest {
 	@Test
 	public void testSenderThreadShutdown() throws Exception {
 		Properties syncProducerProps = new Properties();
-	    syncProducerProps.put("host", "localhost");
+	    syncProducerProps.put("host", "127.0.0.1");
 	    syncProducerProps.put("port", "9092");
 	    syncProducerProps.put("buffer.size", "1000");
 	    syncProducerProps.put("connect.timeout.ms", "1000");
@@ -200,7 +200,7 @@ public class AsyncProducerTest {
 	    SyncProducer basicProducer = new MockProducer(new SyncProducerConfig(syncProducerProps));
 	    
 	    Properties asyncProducerProps = new Properties();
-	    asyncProducerProps.put("host", "localhost");
+	    asyncProducerProps.put("host", "127.0.0.1");
 	    asyncProducerProps.put("port", "9092");
 	    asyncProducerProps.put("queue.size", "10");
 	    asyncProducerProps.put("serializer.class", "com.leansoft.luxun.serializer.StringEncoder");
@@ -232,7 +232,7 @@ public class AsyncProducerTest {
 		EasyMock.replay(basicProducer);
 		
 		Properties props = new Properties();
-	    props.put("host", "localhost");
+	    props.put("host", "127.0.0.1");
 	    props.put("port", "9092");
 	    props.put("queue.size", "50");
 	    props.put("serializer.class", "com.leansoft.luxun.serializer.StringEncoder");

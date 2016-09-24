@@ -4,7 +4,9 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 //import org.apache.thrift.server.THsHaServer;
@@ -19,7 +21,7 @@ import com.leansoft.luxun.utils.Utils;
 
 public class ThriftServer implements Closeable {
 	
-	private static final Logger logger = Logger.getLogger(ThriftServer.class);
+	private static final Logger logger = LoggerFactory.getLogger(ThriftServer.class);
 	
 	
 	private final QueueService.Iface queueService;

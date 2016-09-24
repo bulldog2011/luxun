@@ -2,7 +2,9 @@ package com.leansoft.luxun.client;
 
 import java.io.Closeable;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TFramedTransport;
@@ -15,7 +17,7 @@ import com.leansoft.luxun.common.exception.ConnectionRefusedException;
 
 public abstract class AbstractClient implements Closeable {
 	
-    private final Logger logger = Logger.getLogger(AbstractClient.class);
+    private final Logger logger = LoggerFactory.getLogger(AbstractClient.class);
 
     private final String host;
 

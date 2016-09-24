@@ -7,7 +7,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.leansoft.luxun.message.Message;
 import com.leansoft.luxun.message.generated.CompressionCodec;
@@ -21,7 +22,7 @@ import joptsimple.OptionSpecBuilder;
 
 public class ProducerPerformance {
 	
-	private static final Logger logger = Logger.getLogger(ProducerPerformance.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProducerPerformance.class);
 	
     public static void main(String[] args) {
     	try {
