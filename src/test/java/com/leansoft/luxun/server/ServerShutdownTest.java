@@ -56,12 +56,14 @@ public class ServerShutdownTest {
 			producer.send(topic, sent1);
 			
 			Thread.sleep(200);
+			
+			producer.close();
+			
 			// do a clean shutdown
 			server.close();
 			
 			File cleanShutDownFile = new File(new File(config.getLogDir()), server.CLEAN_SHUTDOWN_FILE);
 			assertTrue(cleanShutDownFile.exists());
-			producer.close();
 		}
 		
 		{
@@ -84,9 +86,10 @@ public class ServerShutdownTest {
 			assertEquals(sent1, listOfMessageList.get(0));
 			assertEquals(sent2, listOfMessageList.get(1));
 			
+			producer.close();
+			
 			server.close();
 			Utils.deleteDirectory(new File(server.config.getLogDir()));
-			producer.close();
 		}
 	}
 	

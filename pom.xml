@@ -7,7 +7,7 @@
   </parent-->
   <groupId>com.leansoft</groupId>
   <artifactId>luxun</artifactId>
-  <version>0.6.1-SNAPSHOT</version>
+  <version>0.6.2</version>
   <packaging>jar</packaging>
 
   <name>luxun</name>
@@ -95,7 +95,7 @@
 	<dependency>
 		<groupId>org.apache.thrift</groupId>
 		<artifactId>libthrift</artifactId>
-		<version>0.6.1</version>
+		<version>0.9.3</version>
 	</dependency>
 	<dependency>
 		<groupId>org.xerial.snappy</groupId>
@@ -166,7 +166,7 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
+            <!-- plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
@@ -186,7 +186,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin-->
             
           <plugin>
             <artifactId>maven-antrun-plugin</artifactId>
@@ -372,7 +372,7 @@
 	        </os>
 	    </activation>
 	    <properties>  
-           <thrift.executable>bin/tool/thrift-0.6.1.exe</thrift.executable>
+           <thrift.executable>bin/tool/thrift-0.9.3.exe</thrift.executable>
         </properties> 
 	</profile>
 	<profile>

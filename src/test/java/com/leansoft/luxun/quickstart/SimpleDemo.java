@@ -32,8 +32,8 @@ public class SimpleDemo {
 	private int port2 = 9093;
 	private LuxunServer server1 = null;
 	private LuxunServer server2 = null;
-	private String brokerList = brokerId1 + ":127.0.0.1:" + port1 + "," + brokerId2 + ":127.0.0.1:" + port2;
-	private String broker1 = brokerId1 + ":127.0.0.1:" + port1;
+	private String brokerList = brokerId1 + ":localhost:" + port1 + "," + brokerId2 + ":localhost:" + port2;
+	private String broker1 = brokerId1 + ":localhost:" + port1;
 	
 	private SimpleConsumer simpleConsumer1 = null;
 	private SimpleConsumer simpleConsumer2 = null;
@@ -356,15 +356,18 @@ public class SimpleDemo {
 		Producer<String, String> producer = new Producer<String, String>(config);
 		
 		for(int i = 0; i < 100; i++) {
-			ProducerData<String, String> data = new ProducerData<String, String>("test-topic", "test-message" + i);
+			ProducerData<String, String> data = new ProducerData<String, String>("test-topicy", "test-message" + i);
 			producer.send(data);
 		}
 		
 		producer.close(); // finish with the producer
 		
+		// give saving time to borker since producer is oneway async
+		TestUtils.sleepQuietly(1000);
+		
 		// consume by different fanout id independently
 		String fanoutId = "group-a";
-		List<MessageList> listOfMessageList = simpleConsumer1.consume("test-topic", fanoutId, 10000);
+		List<MessageList> listOfMessageList = simpleConsumer1.consume("test-topicy", fanoutId, 10000);
 		assertTrue(listOfMessageList.size() == 100);
 		for(int i = 0; i < 100; i++) {
 			MessageList messageList = listOfMessageList.get(i);
@@ -374,7 +377,7 @@ public class SimpleDemo {
 		}
 		
 		fanoutId = "group-b";
-		listOfMessageList = simpleConsumer1.consume("test-topic", fanoutId, 10000);
+		listOfMessageList = simpleConsumer1.consume("test-topicy", fanoutId, 10000);
 		assertTrue(listOfMessageList.size() == 100);
 		for(int i = 0; i < 100; i++) {
 			MessageList messageList = listOfMessageList.get(i);
@@ -384,7 +387,7 @@ public class SimpleDemo {
 		}
 		
 		fanoutId = "group-c";
-		listOfMessageList = simpleConsumer1.consume("test-topic", fanoutId, 10000);
+		listOfMessageList = simpleConsumer1.consume("test-topicy", fanoutId, 10000);
 		assertTrue(listOfMessageList.size() == 100);
 		for(int i = 0; i < 100; i++) {
 			MessageList messageList = listOfMessageList.get(i);

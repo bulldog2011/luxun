@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.apache.thrift.TException;
 
 import com.leansoft.bigqueue.FanOutQueueImplEx.BatchReadResult;
-import com.leansoft.luxun.api.generated.Constants;
 import com.leansoft.luxun.api.generated.ConsumeRequest;
 import com.leansoft.luxun.api.generated.ConsumeResponse;
 import com.leansoft.luxun.api.generated.DeleteTopicRequest;
@@ -31,6 +30,7 @@ import com.leansoft.luxun.api.generated.ProduceResponse;
 import com.leansoft.luxun.api.generated.QueueService;
 import com.leansoft.luxun.api.generated.Result;
 import com.leansoft.luxun.api.generated.ResultCode;
+import com.leansoft.luxun.api.generated.apiConstants;
 import com.leansoft.luxun.common.exception.ErrorMapper;
 import com.leansoft.luxun.common.exception.InvalidTopicException;
 import com.leansoft.luxun.mx.BrokerTopicStat;
@@ -512,7 +512,7 @@ public class LogManager implements Closeable, QueueService.Iface  {
 				try {
 					innerArrayReadLock.lock();
 				
-					if (timestamp == Constants.EARLIEST_TIME) {
+					if (timestamp == apiConstants.EARLIEST_TIME) {
 						long index = log.getFrontIndex(); // queue front index is the earliest index
 						response.setIndex(index);
 						if (!log.isEmpty()) {
@@ -520,7 +520,7 @@ public class LogManager implements Closeable, QueueService.Iface  {
 							response.setTimestampOfIndex(ts);
 						}
 					    result.setResultCode(ResultCode.SUCCESS);
-					} else if (timestamp == Constants.LATEST_TIME) {
+					} else if (timestamp == apiConstants.LATEST_TIME) {
 						long index = log.getRearIndex(); // queue rear index is the latest index
 						response.setIndex(index);
 						if (!log.isEmpty()) {

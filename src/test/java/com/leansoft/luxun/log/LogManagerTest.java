@@ -25,7 +25,7 @@ public class LogManagerTest extends TestCase {
 	
 	private ServerConfig config;
 	private LogManager logManager;
-	private int maxLogAge = 1000;
+	private int maxLogAge = 2000;
 	private File logDir = null;
 	
 	@Before
@@ -92,7 +92,7 @@ public class LogManagerTest extends TestCase {
 		assertTrue(log.getNumberOfBackFiles() != 1); // hasn't expired yet
 		
 		// let logs expire
-		TestUtils.sleepQuietly(2000);
+		TestUtils.sleepQuietly(4000);
 		logManager.cleanupLogs();
 		System.out.println(log.getNumberOfBackFiles());
 		assertTrue(log.getNumberOfBackFiles() == 1);

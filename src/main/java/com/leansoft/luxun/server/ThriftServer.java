@@ -69,8 +69,7 @@ public class ThriftServer implements Closeable {
 		this.server.stop();
 		int timeWaited = 0;
 		int checkInterval = 1000;
-		while(!this.server.isStopped() || this.server.isServing()) {
-			logger.info("Wating server to close, time waited : " + timeWaited / 1000 + " s.");
+		 while(!this.server.isStopped() || this.server.isServing()) {
 			if (timeWaited > CLOSE_TIMEOUT_IN_SECONDS * 1000) {
 				String errorMessage = "fail to stop server within timeout " + CLOSE_TIMEOUT_IN_SECONDS + " seconds";
 				logger.error(errorMessage);
@@ -82,6 +81,7 @@ public class ThriftServer implements Closeable {
 			} catch (InterruptedException e) {
 				// ignore
 			}
+			logger.info("Wating server to close, time waited : " + timeWaited / 1000 + " s.");
 		}
 		logger.info("Thrift server closed.");
 	}

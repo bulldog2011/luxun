@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.leansoft.luxun.api.generated.Constants;
+import com.leansoft.luxun.api.generated.apiConstants;
 import com.leansoft.luxun.consumer.SimpleConsumer;
 import com.leansoft.luxun.message.Message;
 import com.leansoft.luxun.message.MessageList;
@@ -33,9 +33,9 @@ public class SimpleConsumerPerformance {
     		}
     		
     		SimpleConsumer consumer = new SimpleConsumer(config.url.getHost(), config.url.getPort(), 30 * 1000);
-    		long timeStamp = config.fromLatest ? Constants.LATEST_TIME : Constants.EARLIEST_TIME;
+    		long timeStamp = config.fromLatest ? apiConstants.LATEST_TIME : apiConstants.EARLIEST_TIME;
     		long index = consumer.findClosestIndexByTime(config.topic, timeStamp);
-    		logger.info("Consumer got " + (config.fromLatest ? Constants.LATEST_INDEX_STRING : Constants.EARLIEST_INDEX_STRING) + " index : " + index);
+    		logger.info("Consumer got " + (config.fromLatest ? apiConstants.LATEST_INDEX_STRING : apiConstants.EARLIEST_INDEX_STRING) + " index : " + index);
     		
     		long startMs = System.currentTimeMillis();
     		boolean done = false;

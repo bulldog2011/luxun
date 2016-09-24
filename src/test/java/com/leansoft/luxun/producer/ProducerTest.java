@@ -80,7 +80,7 @@ public class ProducerTest extends TestCase {
 	    messageList.add(new Message("test".getBytes()));
 	    producer2.send("test-topic", messageList);
 	    
-	    consumer1 = new SimpleConsumer("127.0.0.l", port1, 1000000);
+	    consumer1 = new SimpleConsumer("127.0.0.1", port1, 1000000);
 	    consumer2 = new SimpleConsumer("127.0.0.1", port2, 1000000);
 	    
 	    Thread.sleep(500);
@@ -367,9 +367,9 @@ public class ProducerTest extends TestCase {
 		Producer<String, String> producer = new Producer<String, String>(config);
 		try {
 			producer.send(new ProducerData<String, String>("new-topic", "key", "test2"));
-		    Thread.sleep(100);
+		    Thread.sleep(1000);
 			producer.send(new ProducerData<String, String>("new-topic", "key1", "test1"));
-		    Thread.sleep(100);
+		    Thread.sleep(1000);
 			
 		    // cross check if brokers got the messages
 			List<MessageList> listOfMessageList1 = consumer1.consume("new-topic", 0, 10000);
