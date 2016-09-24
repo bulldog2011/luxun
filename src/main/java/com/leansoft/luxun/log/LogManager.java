@@ -319,6 +319,18 @@ public class LogManager implements Closeable, QueueService.Iface  {
 			BrokerTopicStat.getInstance(topic).recordBytesIn(messageSize);
 			BrokerTopicStat.getBrokerAllTopicStat().recordBytesIn(messageSize);
 		} catch (Exception e) {
+			if (produceRequest == null) {
+				logger.error("produceRequest is null.");
+			} else {
+				logger.error("topic: " + produceRequest.getTopic());
+				if (produceRequest.getItem() == null) {
+					logger.error("produceRequest.getItem is null.");
+				} else {
+					logger.error("messageSize: " + produceRequest.getItem().length);
+					logger.error("getItem: " + new String(produceRequest.getItem()));
+				}
+			}
+
 			handleException(e, result, produceRequest);
 			BrokerTopicStat.getInstance(produceRequest.getTopic()).recordFailedProduceRequest();
 			BrokerTopicStat.getBrokerAllTopicStat().recordFailedProduceRequest();
@@ -342,6 +354,18 @@ public class LogManager implements Closeable, QueueService.Iface  {
 			BrokerTopicStat.getInstance(topic).recordBytesIn(messageSize);
 			BrokerTopicStat.getBrokerAllTopicStat().recordBytesIn(messageSize);
 		} catch (Exception e) {
+		    if (produceRequest == null) {
+		        logger.error("produceRequest is null.");
+		    } else {
+    	        logger.error("topic: " + produceRequest.getTopic());
+    	        if (produceRequest.getItem() == null) {
+    		        logger.error("produceRequest.getItem is null.");
+    	        } else {
+        	        logger.error("messageSize: " + produceRequest.getItem().length);
+        	        logger.error("getItem: " + new String(produceRequest.getItem()));
+    	        }
+		    }
+
 			BrokerTopicStat.getInstance(produceRequest.getTopic()).recordFailedProduceRequest();
 			BrokerTopicStat.getBrokerAllTopicStat().recordFailedProduceRequest();
 		}
